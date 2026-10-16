@@ -12,26 +12,26 @@
 
 A one-page site for a two-day K-culture festival in Rotterdam: lineup, a crew battle, four zones, a beauty lab, a food board, partner info, a photo wall and three passes. Crimson and red slides with big type that heats from dim to white-hot as you scroll; the first screen's face closes into nine round windows that become the day's schedule.
 
-Good for: music or culture festival; concert, fan meeting or convention; club night or event series with a lineup; any event with a schedule, several areas and ticket tiers. Free for personal and commercial use (MIT), made by [8B](https://8b.com/).
+Good for: music or culture festival; concert, fan meeting or convention; club night or event series with a lineup; any event with a schedule, several areas and ticket tiers.
 
-## Quick start
+## Use it with an AI coding agent
 
-Pick one:
+Download the files into your project (in Windows PowerShell type `curl.exe`):
 
-- **With an AI coding agent** (Claude Code, Codex, Cursor, Windsurf…). Download the files into your project (in Windows PowerShell type `curl.exe`):
-  ```bash
-  curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/index.html
-  curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/AGENTS.md
-  curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/LICENSE
-  curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/CREDITS.md
-  ```
-  Then give your agent this prompt:
-  ```text
-  Read AGENTS.md, then edit index.html. Use this template as the base for an event site for <your event: what it is, dates, venue and address, lineup or programme, areas, ticket types and prices, how to buy>. Keep the layout, the motion and the single-file format; replace the event name, copy, photos, schedule, prices, links and contacts, and recolour it through the CSS variables if needed.
-  ```
-  Give the agent the downloaded file, not a link: an agent reads a link as a summary and would rebuild a different page.
-- **No code.** Download the ZIP, unzip it, replace the contacts and texts in `index.html`, put `index.html` into an empty folder and drag that folder onto [Netlify Drop](https://app.netlify.com/drop). The page is online in a minute.
-- **On GitHub.** Click **[Use this template](https://github.com/new?template_name=event-website-template&template_owner=8bsite)** to get your own copy, then **Settings → Pages → Deploy from a branch → main**. Your site appears at `https://<you>.github.io/<repo>/`.
+```bash
+curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/index.html
+curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/AGENTS.md
+curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/LICENSE
+curl -LO https://raw.githubusercontent.com/8bsite/event-website-template/main/CREDITS.md
+```
+
+Then give your agent this prompt:
+
+```text
+Read AGENTS.md, then edit index.html. Use this template as the base for an event site for <your event: what it is, dates, venue and address, lineup or programme, areas, ticket types and prices, how to buy>. Keep the layout, the motion and the single-file format; replace the event name, copy, photos, schedule, prices, links and contacts, and recolour it through the CSS variables if needed.
+```
+
+Give the agent the downloaded file, not a link: from a link it would rebuild a different page. No agent? Click **[Use this template](https://github.com/new?template_name=event-website-template&template_owner=8bsite)**, edit `index.html` and turn on **Settings → Pages**.
 
 ## What's on the page
 
@@ -49,40 +49,22 @@ Pick one:
 - **See you on the river** — contact block framed by rings: e-mail, venue address, travel, phone, press e-mail
 - **Footer** — width-filling ONDO 온도 wordmark, links, copyright and the Design: 8B credit
 
+## Design
+
+Palette: ![#6e0a1e](https://img.shields.io/badge/-%236e0a1e-6e0a1e?style=flat-square) ![#c8102e](https://img.shields.io/badge/-%23c8102e-c8102e?style=flat-square) ![#fcfafb](https://img.shields.io/badge/-%23fcfafb-fcfafb?style=flat-square) ![#1c0509](https://img.shields.io/badge/-%231c0509-1c0509?style=flat-square) ![#ff5c7a](https://img.shields.io/badge/-%23ff5c7a-ff5c7a?style=flat-square) ![#d9331f](https://img.shields.io/badge/-%23d9331f-d9331f?style=flat-square)  
+Fonts: Asta Sans (Google Fonts). Change both through the CSS variables in the `:root` block at the top of `<head>`. A big display line with `style="--len:N"` fills its width: set N to its new number of characters.
+
+- The rings, the venue plan, the passes and the audience panes are HTML and CSS, not images: restyle them through the tokens. Each audience pane's height comes from style="--share:N" on its column.
+- Korean text (온도 and the dish names) is marked lang="ko"; the font covers Latin and Hangul.
+
 ## Before you publish
 
-- Replace everything marked `data-8b-placeholder` (social preview image, favicon, email, phone, social) and the invented demo facts — prices, dates, address. [AGENTS.md](AGENTS.md) lists them.
+- Replace everything marked `data-8b-placeholder` (social preview image, favicon, email, phone, social) and the invented demo facts: prices, dates, address. [AGENTS.md](AGENTS.md) lists them.
 
-## Customize
+## Tech
 
-- **Colours and fonts**: CSS variables in the `:root` block at the top of `<head>`.
-- **Text**: edit it in place. A big display line with `style="--len:N"` fills its width: set N to its new number of characters.
-- **Photos**: replace `src`, delete `srcset` and `sizes` (they list Unsplash sizes) and update the `alt` texts.
-- **Animations**: each section's animation is one `<script data-8b-part="scene:<id>">` block at the end of the file. For native scroll, delete the Lenis block in `page-init`.
-
-## For developers
-
-- **Stack.** HTML and CSS (custom properties, cascade layers) with GSAP 3.13.0, ScrollTrigger, Lenis 1.3.27 from jsDelivr. No build step, no framework, no npm. 152 KB.
-- **Layout of the file.** `<head>`: CSS variables, shared classes, then one style block per section. Then the markup, one element per section with a one-line comment above it. End of `<body>`: small behaviour scripts, the libraries, smooth scroll (`page-init`), the effects, one animation script per section.
-- **Browsers.** Chrome and Edge 111+, Safari 16.2+, Firefox 113+ (it uses color-mix(), container query units, cascade layers, small/dynamic viewport units).
-- **Accessibility.** Motion runs only when the visitor's system allows it; with "reduce motion" the page is complete and still. FAQ answers use native `<details>` and open without JavaScript. Every photo has alt text.
-- **External requests.** images.unsplash.com, fonts.gstatic.com, cdn.jsdelivr.net. No analytics, no cookies. To self-host everything (offline use, or Google Fonts and GDPR in the EU), download those files and change the URLs.
-- **Licences of the parts.** GSAP is free, commercial use included, under its own standard licence (not MIT); Lenis is MIT; fonts are SIL OFL; photos are under the Unsplash License. See [CREDITS.md](CREDITS.md).
-
-## FAQ
-
-**Can I use it for a client or a commercial site?** Yes. The code is MIT: use it, change it, sell the site you build with it.
-
-**Do I have to keep the "Design: 8B" link?** No. It is welcome, not required.
-
-**Can I use it in React, Next.js, Astro or Vue?** Yes. Move each section's markup and style block into a component and run its animation script in `useGSAP()` (React) or `onMounted` (Vue); start Lenis once. Or keep it as a separate static landing page next to your app (`example.com` for the landing, `app.example.com` for the app).
-
-**Where are the photos from?** Unsplash; they load from Unsplash's servers. Replace them with your own when you can.
-
-## More free templates
-
-[More 8B templates on GitHub](https://github.com/8bsite) · [8b.com](https://8b.com/)
+GSAP 3.13.0, ScrollTrigger, Lenis 1.3.27 from jsDelivr, 152 KB, no build step. Chrome and Edge 111+, Safari 16.2+, Firefox 113+ (it uses color-mix(), container query units, cascade layers, small/dynamic viewport units). With "reduce motion" on, the page is complete and still.
 
 ## License
 
-The template code is MIT licensed — see [LICENSE](LICENSE). Photos, fonts and libraries keep their own licences — see [CREDITS.md](CREDITS.md).
+MIT, see [LICENSE](LICENSE); the "Design: 8B" footer link is welcome, not required. Photos, fonts and libraries keep their own licences: [CREDITS.md](CREDITS.md). More free templates: [github.com/8bsite](https://github.com/8bsite).
