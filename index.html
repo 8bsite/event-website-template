@@ -4,6 +4,7 @@
   Source: https://github.com/8bsite/event-website-template
   MIT License (code) https://8b.com/ · Photos: Unsplash License, see CREDITS.md · Fonts: Google Fonts (OFL)
   One HTML file, no build step. Notes for people and AI agents: README.md and AGENTS.md.
+  Scroll motion: CSS scroll-driven animations and an inline script, no libraries. A GSAP build of this page: index.gsap.html.
 -->
 <html lang="en">
 <head>
@@ -795,10 +796,6 @@
 /* end font fallbacks */
 *, *::before, *::after { box-sizing: border-box; }
 html { background: var(--color-1); color: var(--color-3); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: clip; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
 body { margin: 0; background: var(--color-1); overflow-x: clip; }
 h1, h2, h3, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
@@ -1141,28 +1138,6 @@ button { font: inherit; color: inherit; }
 }
 }
 </style>
-<style data-8b-part="scene-style:looks">
-@layer scenes {
-@media (prefers-reduced-motion: no-preference) {
-  #looks[data-track] .lk-scroll { height: 270svh; }
-  #looks[data-track] .lk-viewport { position: sticky; top: 0; height: 100svh; overflow: hidden; display: flex; align-items: center; }
-  #looks[data-track] .lk-track { display: flex; gap: 0; width: max-content; }
-  #looks[data-track] .lk-panel { width: calc(100vw - 2 * var(--space-1)); flex: none; }
-  #looks[data-track] .lk-photo { max-height: 72svh; }
-}
-@media (prefers-reduced-motion: no-preference) and (max-width: 860px) {
-  #looks[data-track] .lk-viewport { align-items: flex-start; padding-top: 70px; }
-  #looks[data-track] .lk-photo { height: 46svh; width: auto; justify-self: start; }
-}
-}
-</style>
-<style data-8b-part="scene-style:battle">
-@layer scenes {
-@media (prefers-reduced-motion: no-preference) {
-  #battle[data-duel] { height: 270svh; }
-}
-}
-</style>
 <style data-8b-part="section:food">
 @layer sections {
 #food { overflow: clip; background: var(--color-1); padding: clamp(80px, 13svh, 150px) 0 clamp(70px, 10svh, 120px); }
@@ -1319,6 +1294,246 @@ button { font: inherit; color: inherit; }
 #footer small { opacity: .75; }
 }
 </style>
+<style data-8b-part="motion">
+@property --motion-heat-v { syntax: '<number>'; inherits: true; initial-value: 1; }
+@layer scenes {
+[data-8b-live] { --ease-power3-out: linear(0, 0.0963, 0.1855, 0.2679, 0.3439, 0.4138, 0.478, 0.5367, 0.5904, 0.6392, 0.6836, 0.7237, 0.7599, 0.7924, 0.8215, 0.8474, 0.8704, 0.8907, 0.9085, 0.924, 0.9375, 0.9491, 0.959, 0.9674, 0.9744, 0.9802, 0.985, 0.9888, 0.9919, 0.9943, 0.9961, 0.9974, 0.9984, 0.9991, 0.9995, 0.9998, 0.9999, 1, 1, 1, 1); }
+[data-8b-live] [data-8b-motion~="heat"] { view-timeline: --motion-heat block; view-timeline-inset: 0; animation-name: motion-heat---heat; animation-timeline: --motion-heat; animation-range: cover 5vh cover 45vh; animation-timing-function: linear; animation-fill-mode: both; --heat: var(--motion-heat-v); }
+[data-8b-live] [data-8b-motion~="rise"]:not(:has(> *)), [data-8b-live] [data-8b-motion~="rise"] > * { animation-name: motion-rise-y, motion-rise-opacity; animation-duration: 0.8s; animation-delay: calc(var(--i, 0) * 0.09s); animation-timing-function: var(--ease-power3-out); animation-fill-mode: both; animation-play-state: paused; }
+[data-8b-live] [data-8b-motion~="rise"]:not(:has(> *)) { animation-delay: 0s; }
+[data-8b-live] [data-8b-motion~="rise"] [data-rule] { animation-name: motion-rise-rule; animation-duration: 1s; animation-delay: calc(var(--i, 0) * 0.09s); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); animation-fill-mode: both; animation-play-state: paused; transform-origin: 0% 50%; }
+[data-8b-live] [data-8b-motion~="rise"].is-in:not(:has(> *)), [data-8b-live] [data-8b-motion~="rise"].is-in > *, [data-8b-live] [data-8b-motion~="rise"].is-in [data-rule] { animation-play-state: running; }
+[data-8b-live] [data-8b-motion~="ringdraw"] { animation-name: motion-ringdraw-scale, motion-ringdraw-rotate, motion-ringdraw-opacity; animation-duration: 0.9s; animation-delay: 0s; animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1), var(--ease-power3-out), cubic-bezier(0.25, 1, 0.5, 1); animation-fill-mode: both; animation-play-state: paused; transform: none; }
+[data-8b-live] [data-8b-motion~="ringdraw"].is-in { animation-play-state: running; }
+@keyframes motion-heat---heat { 0% { --motion-heat-v: 0; } 100% { --motion-heat-v: 1; } }
+@keyframes motion-rise-y { 0% { translate: 0px 34px; } 100% { translate: 0px 0px; } }
+@keyframes motion-rise-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes motion-rise-rule { 0% { scale: 0 1; } 100% { scale: 1 1; } }
+@keyframes motion-ringdraw-scale { 0% { scale: 1.35; } 100% { scale: 1; } }
+@keyframes motion-ringdraw-rotate { 0% { rotate: -70deg; } 100% { rotate: 0deg; } }
+@keyframes motion-ringdraw-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+}
+</style>
+<style data-8b-part="scene:opening">
+@property --opening-grow { syntax: '<number>'; inherits: true; initial-value: 0; }
+@layer scenes {
+[data-8b-live] { --ease-power2-inout: linear(0, 0.0001, 0.0005, 0.0017, 0.004, 0.0078, 0.0135, 0.0214, 0.032, 0.0456, 0.0625, 0.0832, 0.108, 0.1373, 0.1715, 0.2109, 0.256, 0.3071, 0.3645, 0.4287, 0.5, 0.5713, 0.6355, 0.6929, 0.744, 0.7891, 0.8285, 0.8627, 0.892, 0.9168, 0.9375, 0.9544, 0.968, 0.9786, 0.9865, 0.9922, 0.996, 0.9983, 0.9995, 0.9999, 1); }
+[data-8b-live] #opening { view-timeline: --opening-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #opening .op-zoom, [data-8b-live] #opening .op-word--a, [data-8b-live] #opening .op-word--c, [data-8b-live] #opening .op-word--b, [data-8b-live] #opening .op-upper, [data-8b-live] #opening .op-lower, [data-8b-live] #opening .op-veil, [data-8b-live] #opening .op-rings > li, [data-8b-live] #opening .op-rings > li > .m-ring__time, [data-8b-live] #opening .op-rings > li > .m-ring__label { animation-timeline: --opening-t1; animation-fill-mode: both; }
+[data-8b-live] #opening .op-zoom { animation-range: cover 100vh cover calc(68.9655% - 37.931vh); animation-timing-function: linear; transform: none; }
+[data-8b-live] #opening .op-word--a, [data-8b-live] #opening .op-word--c, [data-8b-live] #opening .op-word--b { animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); }
+[data-8b-live] #opening .op-word--a { animation-name: opening-span-op-word-translate; animation-range: cover 100vh cover calc(37.931% + 24.1379vh); transform: none; }
+[data-8b-live] #opening .op-word--c { animation-name: opening-span-op-word-translate-2; animation-range: cover 100vh cover calc(37.931% + 24.1379vh); transform: none; }
+[data-8b-live] #opening .op-word--b { animation-name: opening-span-op-word-translate-3, opening-span-op-word-rotate; animation-range: cover 100vh cover calc(31.0345% + 37.931vh); transform: none; }
+[data-8b-live] #opening .op-upper { animation-name: opening-div-op-upper-translate, opening-div-op-upper-opacity; animation-range: cover 100vh cover calc(24.1379% + 51.7241vh); animation-timing-function: linear; transform: none; }
+[data-8b-live] #opening .op-lower { animation-range: cover calc(1.3793% + 97.2414vh) cover calc(22.069% + 55.8621vh); animation-timing-function: linear; transform: none; }
+[data-8b-live] #opening .op-veil { animation-name: opening-svg-op-veil-opacity, opening-svg-op-veil-visibility, opening-svg-op-veil---grow; animation-range: cover calc(17.931% + 64.1379vh) cover calc(19.3103% + 61.3793vh), cover calc(17.931% + 64.1379vh) cover calc(19.3103% + 61.3793vh), cover calc(19.3103% + 61.3793vh) cover calc(68.9655% - 37.931vh); animation-timing-function: linear, linear, var(--ease-power2-inout); --grow: var(--opening-grow); }
+[data-8b-live] #opening .op-rings > li:nth-of-type(5) { animation-range: cover calc(42.7586% + 14.4828vh) cover calc(63.4483% - 26.8966vh); }
+[data-8b-live] #opening .op-rings > li:is(:nth-of-type(4), :nth-of-type(6)) { animation-range: cover calc(47.5862% + 4.8276vh) cover calc(68.2759% - 36.5517vh); }
+[data-8b-live] #opening .op-rings > li:is(:nth-of-type(3), :nth-of-type(7)) { animation-range: cover calc(52.4138% - 4.8276vh) cover calc(73.1034% - 46.2069vh); }
+[data-8b-live] #opening .op-rings > li:is(:nth-of-type(2), :nth-of-type(8)) { animation-range: cover calc(57.2414% - 14.4828vh) cover calc(77.931% - 55.8621vh); }
+[data-8b-live] #opening .op-rings > li { animation-name: opening-li-m-ring-scale, opening-li-m-ring-opacity; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); transform: none; }
+[data-8b-live] #opening .op-rings > li:is(:nth-of-type(1), :nth-of-type(9)) { animation-range: cover calc(62.069% - 24.1379vh) cover calc(82.7586% - 65.5172vh); }
+[data-8b-live] #opening .op-rings > li > .m-ring__time { animation-name: opening-span-m-ring-time-translate, opening-li-m-ring-opacity; animation-range: cover calc(51.0345% + 4.1379% * var(--i) - 2.069vh - 8.2758vh * var(--i)) cover calc(64.8276% + 4.1379% * var(--i) - 29.6552vh - 8.2758vh * var(--i)); animation-timing-function: linear; transform: none; }
+[data-8b-live] #opening .op-rings > li > .m-ring__label { animation-name: opening-span-m-ring-time-translate, opening-li-m-ring-opacity; animation-range: cover calc(53.1034% + 4.138% * var(--i) - 6.2069vh - 8.2759vh * var(--i)) cover calc(66.8966% + 4.1379% * var(--i) - 33.7931vh - 8.2759vh * var(--i)); animation-timing-function: linear; transform: none; }
+@keyframes opening-div-op-zoom-scale { 0% { scale: 1; } 100% { scale: 1.18; } }
+@keyframes opening-div-op-zoom-translate-d { 0% { translate: 0px 0px; } 100% { translate: 0px 9.091%; } }
+@keyframes opening-div-op-zoom-translate-m { 0% { translate: 0px 0px; } 100% { translate: 0px 27.273%; } }
+/* The title's gradient (background-clip: text) does not paint a word that is transformed (its own stacking context),
+   so the title vanished, at rest too (a word holds translate 0). Each word paints the title's gradient itself, sized
+   to the title and offset by its place in it (scene-script:opening measures --opening-title-w/-h and each word's
+   --opening-word-x/-y), so it reads as one gradient and travels with the word; the heat flow drives --opening-heat. */
+@property --opening-heat { syntax: '<number>'; inherits: true; initial-value: 0.2; }
+[data-8b-live] #opening .op-title { background-image: none; animation-name: op-title-in, opening-heat-flow; }
+[data-8b-live] #opening .op-word {
+  background-image: linear-gradient(95deg, color-mix(in srgb, var(--color-6) 88%, transparent) 0%, color-mix(in srgb, var(--color-3) 94%, transparent) 26%, var(--color-3) 46%, color-mix(in srgb, var(--color-5) 92%, transparent) 70%, color-mix(in srgb, var(--color-2) 90%, transparent) 100%);
+  background-size: calc(var(--opening-title-w, 100%) * 1.8) var(--opening-title-h, 100%);
+  background-position: calc(-1 * var(--opening-word-x, 0px) - var(--opening-heat) * var(--opening-title-w, 0px) * 0.8) calc(-1 * var(--opening-word-y, 0px));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+@keyframes opening-heat-flow { from { --opening-heat: 0.2; } to { --opening-heat: 0.8; } }
+@keyframes opening-span-op-word-translate { 0% { translate: 0px 0px; } 100% { translate: -75% 0px; } }
+@keyframes opening-span-op-word-translate-2 { 0% { translate: 0px 0px; } 100% { translate: 55% 0px; } }
+@keyframes opening-span-op-word-translate-3 { 0% { translate: 0px 0px; } 100% { translate: 0px -160%; } }
+@keyframes opening-span-op-word-rotate { 0% { rotate: 0deg; } 100% { rotate: -8deg; } }
+@keyframes opening-div-op-upper-translate { 0% { translate: 0px 0px; } 100% { translate: 0px -22vh; } }
+@keyframes opening-div-op-upper-opacity { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes opening-div-op-lower-translate-d { 0% { translate: 0px 0px; } 100% { translate: 0px -142.222%; } }
+@keyframes opening-div-op-lower-translate-m { 0% { translate: 0px 0px; } 100% { translate: 0px -12vh; } }
+@keyframes opening-svg-op-veil-opacity { 0% { opacity: 0; } 0.005% { opacity: 0.005; } 99.995% { opacity: 0.995; } 100% { opacity: 1; } }
+@keyframes opening-svg-op-veil-visibility { 0% { visibility: hidden; } 0.005% { visibility: visible; } 100% { visibility: visible; } }
+@keyframes opening-svg-op-veil---grow { 0% { --opening-grow: 1; } 100% { --opening-grow: 0; } }
+@keyframes opening-li-m-ring-scale { 0% { scale: 0.35; } 100% { scale: 1; } }
+@keyframes opening-li-m-ring-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes opening-span-m-ring-time-translate { 0% { translate: 0px 14px; } 100% { translate: 0px 0px; } }
+@media (min-width: 861px) {
+  [data-8b-live] #opening .op-zoom { animation-name: opening-div-op-zoom-scale, opening-div-op-zoom-translate-d; }
+  [data-8b-live] #opening .op-lower { animation-name: opening-div-op-lower-translate-d, opening-div-op-upper-opacity; }
+}
+@media (max-width: 860px) {
+  [data-8b-live] #opening .op-zoom { animation-name: opening-div-op-zoom-scale, opening-div-op-zoom-translate-m; }
+  [data-8b-live] #opening .op-lower { animation-name: opening-div-op-lower-translate-m, opening-div-op-upper-opacity; }
+}
+}
+</style>
+<style data-8b-part="scene:lineup">
+@property --lineup-heat { syntax: '<number>'; inherits: true; initial-value: 0.1; }
+@layer scenes {
+[data-8b-live] #lineup .lu-list > li { view-timeline: --lineup-item block; view-timeline-inset: 0; }
+[data-8b-live] #lineup .lu-list > li > .lu-face, [data-8b-live] #lineup .lu-list > li > .lu-name-box > .lu-name { animation-timeline: --lineup-item; animation-range: cover 0% cover 100%; animation-timing-function: linear; animation-fill-mode: both; transform: none; }
+[data-8b-live] #lineup .lu-list > li > .lu-face { animation-name: lineup-figure-lu-face-scale; }
+[data-8b-live] #lineup .lu-list > li > .lu-name-box > .lu-name { animation-name: lineup-h3-lu-name---heat, lineup-h3-lu-name-translate; --heat: var(--lineup-heat); }
+@keyframes lineup-figure-lu-face-scale { 0% { scale: 0.42; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); } 50% { scale: 1; animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0); } 100% { scale: 0.42; } }
+@keyframes lineup-h3-lu-name---heat { 0% { --lineup-heat: 0; } 0.002% { --lineup-heat: 0.0004; animation-timing-function: cubic-bezier(0.3333, 0.6667, 0.6667, 1); } 50% { --lineup-heat: 1; animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); } 99.998% { --lineup-heat: 0.10036; } 100% { --lineup-heat: 0.1; } }
+@keyframes lineup-h3-lu-name-translate { 0% { translate: 7% 0px; animation-timing-function: cubic-bezier(0.3333, 0.6667, 0.6667, 1); } 50% { translate: 0px 0px; animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); } 100% { translate: -7% 0px; } }
+}
+</style>
+<style data-8b-part="scene:battle">
+@property --battle-split { syntax: '<percentage>'; inherits: true; initial-value: 50%; }
+@layer scenes {
+@media (prefers-reduced-motion: no-preference) {
+  [data-8b-live] #battle { height: 270svh; }
+}
+}
+@layer scenes {
+[data-8b-live] { --ease-power2-inout: linear(0, 0.0001, 0.0005, 0.0017, 0.004, 0.0078, 0.0135, 0.0214, 0.032, 0.0456, 0.0625, 0.0832, 0.108, 0.1373, 0.1715, 0.2109, 0.256, 0.3071, 0.3645, 0.4287, 0.5, 0.5713, 0.6355, 0.6929, 0.744, 0.7891, 0.8285, 0.8627, 0.892, 0.9168, 0.9375, 0.9544, 0.968, 0.9786, 0.9865, 0.9922, 0.996, 0.9983, 0.9995, 0.9999, 1); }
+[data-8b-live] #battle { view-timeline: --battle-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #battle .bt-rounds > li, [data-8b-live] #battle .bt-stage, [data-8b-live] #battle .bt-name--a, [data-8b-live] #battle .bt-name--b { animation-timeline: --battle-t1; animation-fill-mode: both; }
+[data-8b-live] #battle .bt-rounds > li { animation-range: cover 100vh cover calc(86.1111% - 72.2222vh); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+[data-8b-live] #battle .bt-rounds > li:nth-of-type(1) { animation-name: battle-li-bt-round-opacity; }
+[data-8b-live] #battle .bt-rounds > li:nth-of-type(2) { animation-name: battle-li-bt-round-opacity-2; }
+[data-8b-live] #battle .bt-rounds > li:nth-of-type(3) { animation-name: battle-li-bt-round-opacity-3; }
+[data-8b-live] #battle .bt-stage, [data-8b-live] #battle .bt-name--a, [data-8b-live] #battle .bt-name--b { animation-range: cover 100vh cover calc(100% - 100vh); }
+[data-8b-live] #battle .bt-stage { animation-name: battle-div-bt-stage---split; animation-timing-function: var(--ease-power2-inout); --split: var(--battle-split); }
+[data-8b-live] #battle .bt-name--a { animation-name: battle-p-bt-name-scale; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); transform: none; }
+[data-8b-live] #battle .bt-name--b { animation-name: battle-p-bt-name-scale-2; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); transform: none; }
+@keyframes battle-li-bt-round-opacity { 0% { opacity: 0.35; } 6.4516% { opacity: 1; } 35.4839% { opacity: 1; } 41.9355% { opacity: 0.35; } 90.3226% { opacity: 0.35; } 100% { opacity: 1; } }
+@keyframes battle-li-bt-round-opacity-2 { 0% { opacity: 0.35; } 35.4839% { opacity: 0.35; } 41.9355% { opacity: 1; } 83.871% { opacity: 1; } 90.3226% { opacity: 0.35; } 100% { opacity: 1; } }
+@keyframes battle-li-bt-round-opacity-3 { 0% { opacity: 0.35; } 90.3226% { opacity: 0.35; } 100% { opacity: 1; } }
+@keyframes battle-div-bt-stage---split { 0% { --battle-split: 50%; } 27.7778% { --battle-split: 74%; } 30.5556% { --battle-split: 74%; } 69.4444% { --battle-split: 26%; } 72.2222% { --battle-split: 26%; } 100% { --battle-split: 50%; } }
+@keyframes battle-p-bt-name-scale { 0% { scale: 1; } 27.7778% { scale: 1.16; } 30.5556% { scale: 1.16; } 69.4444% { scale: 0.82; } 72.2222% { scale: 0.82; } 100% { scale: 1; } }
+@keyframes battle-p-bt-name-scale-2 { 0% { scale: 1; } 27.7778% { scale: 0.82; } 30.5556% { scale: 0.82; } 69.4444% { scale: 1.16; } 72.2222% { scale: 1.16; } 100% { scale: 1; } }
+}
+</style>
+<style data-8b-part="scene:zones">
+@layer scenes {
+[data-8b-live] { --ease-power2-inout: linear(0, 0.0001, 0.0005, 0.0017, 0.004, 0.0078, 0.0135, 0.0214, 0.032, 0.0456, 0.0625, 0.0832, 0.108, 0.1373, 0.1715, 0.2109, 0.256, 0.3071, 0.3645, 0.4287, 0.5, 0.5713, 0.6355, 0.6929, 0.744, 0.7891, 0.8285, 0.8627, 0.892, 0.9168, 0.9375, 0.9544, 0.968, 0.9786, 0.9865, 0.9922, 0.996, 0.9983, 0.9995, 0.9999, 1); }
+[data-8b-live] #zones { timeline-scope: --zones-t1; }
+[data-8b-live] #zones .zn-items { view-timeline: --zones-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #zones .zn-map, [data-8b-live] #zones .zn-map > figure:nth-of-type(-n+4) { animation-timeline: --zones-t1; animation-fill-mode: both; }
+[data-8b-live] #zones .zn-map { animation-name: zones-div-zn-map-translate, zones-div-zn-map-scale; animation-range: cover 30vh cover calc(100% - 45vh); animation-timing-function: var(--ease-power2-inout); transform: none; }
+[data-8b-live] #zones .zn-map > figure:nth-of-type(-n+4) { animation-range: cover calc(2.7027% + 27.973vh) cover calc(97.2973% - 42.973vh); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+[data-8b-live] #zones .zn-map > figure:nth-of-type(2) { animation-name: zones-figure-zn-spot-opacity; }
+[data-8b-live] #zones .zn-map > figure:nth-of-type(3) { animation-name: zones-figure-zn-spot-opacity-2; }
+[data-8b-live] #zones .zn-map > figure:nth-of-type(4) { animation-name: zones-figure-zn-spot-opacity-3; }
+[data-8b-live] #zones .zn-map > figure:nth-of-type(1) { animation-name: zones-figure-zn-spot-opacity-4; }
+@keyframes zones-div-zn-map-translate { 0% { translate: 0px 0px; } 13.5135% { translate: 32.3% 32.3%; } 21.6216% { translate: 32.3% 32.3%; } 35.1351% { translate: -43.7% 36.1%; } 43.2432% { translate: -43.7% 36.1%; } 56.7568% { translate: 39.9% -45.6%; } 64.8649% { translate: 39.9% -45.6%; } 78.3784% { translate: -34.2% -38%; } 86.4865% { translate: -34.2% -38%; } 100% { translate: 0px 0px; } }
+@keyframes zones-div-zn-map-scale { 0% { scale: 1; } 13.5135% { scale: 1.9; } 21.6216% { scale: 1.9; } 35.1351% { scale: 1.9; } 43.2432% { scale: 1.9; } 56.7568% { scale: 1.9; } 64.8649% { scale: 1.9; } 78.3784% { scale: 1.9; } 86.4865% { scale: 1.9; } 100% { scale: 1; } }
+@keyframes zones-figure-zn-spot-opacity { 0% { opacity: 1; } 8.5714% { opacity: 0.35; } 22.8571% { opacity: 0.35; } 31.4286% { opacity: 1; } 45.7143% { opacity: 1; } 54.2857% { opacity: 0.35; } 68.5714% { opacity: 0.35; } 77.1429% { opacity: 0.35; } 91.4286% { opacity: 0.35; } 100% { opacity: 1; } }
+@keyframes zones-figure-zn-spot-opacity-2 { 0% { opacity: 1; } 8.5714% { opacity: 0.35; } 22.8571% { opacity: 0.35; } 31.4286% { opacity: 0.35; } 45.7143% { opacity: 0.35; } 54.2857% { opacity: 1; } 68.5714% { opacity: 1; } 77.1429% { opacity: 0.35; } 91.4286% { opacity: 0.35; } 100% { opacity: 1; } }
+@keyframes zones-figure-zn-spot-opacity-3 { 0% { opacity: 1; } 8.5714% { opacity: 0.35; } 22.8571% { opacity: 0.35; } 31.4286% { opacity: 0.35; } 45.7143% { opacity: 0.35; } 54.2857% { opacity: 0.35; } 68.5714% { opacity: 0.35; } 77.1429% { opacity: 1; } 91.4286% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes zones-figure-zn-spot-opacity-4 { 0% { opacity: 1; } 8.5714% { opacity: 1; } 22.8571% { opacity: 1; } 31.4286% { opacity: 0.35; } 45.7143% { opacity: 0.35; } 54.2857% { opacity: 0.35; } 68.5714% { opacity: 0.35; } 77.1429% { opacity: 0.35; } 91.4286% { opacity: 0.35; } 100% { opacity: 1; } }
+}
+</style>
+<style data-8b-part="scene:looks">
+@layer scenes {
+@media (prefers-reduced-motion: no-preference) {
+  [data-8b-live] #looks .lk-scroll { height: 270svh; }
+  [data-8b-live] #looks .lk-viewport { position: sticky; top: 0; height: 100svh; overflow: hidden; display: flex; align-items: center; }
+  [data-8b-live] #looks .lk-track { display: flex; gap: 0; width: max-content; }
+  [data-8b-live] #looks .lk-panel { width: calc(100vw - 2 * var(--space-1)); flex: none; }
+  [data-8b-live] #looks .lk-photo { max-height: 72svh; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 860px) {
+  [data-8b-live] #looks .lk-viewport { align-items: flex-start; padding-top: 70px; }
+  [data-8b-live] #looks .lk-photo { height: 46svh; width: auto; justify-self: start; }
+}
+}
+@layer scenes {
+[data-8b-live] #looks .lk-scroll { view-timeline: --looks-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #looks .lk-track > li > .lk-photo { animation-name: looks-figure-lk-photo-clippath; animation-timeline: --looks-t1; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); animation-fill-mode: both; }
+[data-8b-live] #looks .lk-track > li:nth-of-type(1) > .lk-photo { animation-range: cover 0% cover calc(37.037% - 37.037vh); }
+[data-8b-live] #looks .lk-track { animation-timeline: --looks-t1; animation-range: cover calc(37.037% - 37.037vh) cover calc(100% - 100vh); animation-timing-function: linear; animation-fill-mode: both; transform: none; }
+[data-8b-live] #looks .lk-track > li:nth-of-type(2) > .lk-photo { animation-range: cover calc(46.2963% - 46.2963vh) cover calc(68.5185% - 68.5185vh); }
+[data-8b-live] #looks .lk-track > li:nth-of-type(3) > .lk-photo { animation-range: cover calc(77.7778% - 77.7778vh) cover calc(100% - 100vh); }
+@keyframes looks-figure-lk-photo-clippath { 0% { clip-path: circle(10% at 50% 42%); } 100% { clip-path: circle(80% at 50% 42%); } }
+[data-8b-live] #looks .lk-track { animation-name: looks-ol-lk-track-translate; }
+@keyframes looks-ol-lk-track-translate { 0% { translate: 0px 0px; } 100% { translate: calc(-1 * var(--looks-travel, 0px)) 0px; } }
+}
+</style>
+<style data-8b-part="scene:partners">
+@layer scenes {
+[data-8b-live] #partners { view-timeline: --partners-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #partners .pt-man, [data-8b-live] #partners .pt-cols > li > .pt-pane { animation-timeline: --partners-t1; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); animation-fill-mode: both; }
+[data-8b-live] #partners .pt-man { animation-name: partners-figure-pt-man-translate, partners-figure-pt-man-scale; animation-range: cover 15vh cover calc(83.3333% - 80.8333vh); transform: none; }
+[data-8b-live] #partners .pt-cols > li > .pt-pane { animation-name: partners-div-pt-pane-clippath; animation-range: cover calc(16.6667% + 12.5% * var(--i) - 4.1667vh - 14.375vh * var(--i)) cover calc(62.5% + 12.5% * var(--i) - 56.875vh - 14.375vh * var(--i)); }
+@keyframes partners-figure-pt-man-translate { 0% { translate: 0px 24%; } 100% { translate: 0px 0px; } }
+@keyframes partners-figure-pt-man-scale { 0% { scale: 1.08; } 100% { scale: 1; } }
+@keyframes partners-div-pt-pane-clippath { 0% { clip-path: inset(100% 0% 0%); } 100% { clip-path: inset(0%); } }
+}
+</style>
+<style data-8b-part="scene:fanwall">
+@layer scenes {
+[data-8b-live] #fanwall .fw-wall > li { view-timeline: --fanwall-item block; view-timeline-inset: 0; }
+[data-8b-live] #fanwall .fw-wall > li > .fw-grade { animation-name: fanwall-span-fw-grade-opacity; animation-timeline: --fanwall-item; animation-timing-function: linear; animation-fill-mode: both; }
+@keyframes fanwall-span-fw-grade-opacity { 0% { opacity: 1; animation-timing-function: cubic-bezier(0.3333, 0.6667, 0.6667, 1); } 38.8889% { opacity: 0; } 55.5556% { opacity: 0; animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); } 100% { opacity: 1; } }
+@media (min-width: 861px) {
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(4n+1) > .fw-grade { animation-range: cover 50% cover 100%; }
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(4n+2) > .fw-grade { animation-range: cover 53.2468% cover 100%; }
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(4n+3) > .fw-grade { animation-range: cover 56.0976% cover 100%; }
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(4n+4) > .fw-grade { animation-range: cover 58.6207% cover 100%; }
+}
+@media (max-width: 860px) {
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(2n+1) > .fw-grade { animation-range: cover 50% cover 100%; }
+  [data-8b-live] #fanwall .fw-wall > li:nth-of-type(2n+2) > .fw-grade { animation-range: cover 53.2468% cover 100%; }
+}
+}
+</style>
+<style data-8b-part="scene:tickets">
+@layer scenes {
+[data-8b-live] #tickets .tk-passes > li { animation-fill-mode: both; transform: none; }
+@keyframes tickets-li-tk-pass-translate-d { 0% { translate: 72% 60px; } 100% { translate: 0px 0px; } }
+@keyframes tickets-li-tk-pass-translate-m { 0% { translate: var(--tickets-li-tk-pass-translate-from, -10%) 0px; } 100% { translate: 0px 0px; } }
+@keyframes tickets-li-tk-pass-rotate-d { 0% { rotate: -9deg; } 100% { rotate: 0deg; } }
+@keyframes tickets-li-tk-pass-rotate-m { 0% { rotate: var(--tickets-li-tk-pass-rotate-from, -5deg); } 100% { rotate: 0deg; } }
+@keyframes tickets-li-tk-pass-translate-2 { 0% { translate: 0px 0px; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); } 100% { translate: 0px 0px; } }
+@keyframes tickets-li-tk-pass-rotate-2 { 0% { rotate: 0deg; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); } 100% { rotate: 0deg; } }
+@keyframes tickets-li-tk-pass-translate-3 { 0% { translate: -72% 60px; } 100% { translate: 0px 0px; } }
+@keyframes tickets-li-tk-pass-rotate-3 { 0% { rotate: 9deg; } 100% { rotate: 0deg; } }
+@media (min-width: 861px) {
+  [data-8b-live] #tickets .tk-passes { view-timeline: --tickets-t1 block; view-timeline-inset: 0; }
+  [data-8b-live] #tickets .tk-passes > li { animation-timeline: --tickets-t1; animation-range: cover 5vh cover 65vh; }
+  [data-8b-live] #tickets .tk-pass--day { animation-name: tickets-li-tk-pass-translate-d, tickets-li-tk-pass-rotate-d; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); }
+  [data-8b-live] #tickets .tk-pass--weekend { animation-name: tickets-li-tk-pass-translate-2, tickets-li-tk-pass-rotate-2; animation-timing-function: linear; }
+  [data-8b-live] #tickets .tk-pass--pit { animation-name: tickets-li-tk-pass-translate-3, tickets-li-tk-pass-rotate-3; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); }
+}
+@media (max-width: 860px) {
+  [data-8b-live] #tickets .tk-passes > li { view-timeline: --tickets-item block; view-timeline-inset: 0; animation-name: tickets-li-tk-pass-translate-m, tickets-li-tk-pass-rotate-m; animation-timeline: --tickets-item; animation-range: cover 0% cover 45vh; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); }
+}
+}
+</style>
+<style data-8b-part="scene:contact">
+@property --contact-heat { syntax: '<number>'; inherits: true; initial-value: 1; }
+@layer scenes {
+[data-8b-live] #contact { view-timeline: --contact-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(-n+4), [data-8b-live] #contact-title { animation-timeline: --contact-t1; animation-fill-mode: both; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(-n+4) { animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); transform: none; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(1) { animation-name: contact-div-ct-rings-span-scale, contact-div-ct-rings-span-opacity; animation-range: cover 0% cover 39.604%; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(2) { animation-name: contact-div-ct-rings-span-scale-2, contact-div-ct-rings-span-opacity; animation-range: cover 3.4653% cover 43.0693%; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(3) { animation-name: contact-div-ct-rings-span-scale-3, contact-div-ct-rings-span-opacity; animation-range: cover 6.9307% cover 46.5347%; }
+[data-8b-live] #contact .ct-rings > span:nth-of-type(4) { animation-name: contact-div-ct-rings-span-scale-4, contact-div-ct-rings-span-opacity; animation-range: cover 10.396% cover 50%; }
+[data-8b-live] #contact-title { animation-name: contact-contact-title---heat; animation-range: cover 9.901% cover 44.5545%; animation-timing-function: linear; --heat: var(--contact-heat); }
+@keyframes contact-div-ct-rings-span-scale { 0% { scale: 0.15; } 100% { scale: 1; } }
+@keyframes contact-div-ct-rings-span-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes contact-div-ct-rings-span-scale-2 { 0% { scale: 0.27; } 100% { scale: 1; } }
+@keyframes contact-div-ct-rings-span-scale-3 { 0% { scale: 0.39; } 100% { scale: 1; } }
+@keyframes contact-div-ct-rings-span-scale-4 { 0% { scale: 0.51; } 100% { scale: 1; } }
+@keyframes contact-contact-title---heat { 0% { --contact-heat: 0; } 0.002% { --contact-heat: 0.000143; } 100% { --contact-heat: 1; } }
+}
+</style>
+<script data-8b-part="motion-gate">
+if (matchMedia('(prefers-reduced-motion: no-preference)').matches && CSS.supports('animation-timeline: view()')) document.documentElement.setAttribute('data-8b-live', '');
+</script>
 </head>
 <body class="m-text">
 <a class="skip m-text-4" href="#main">Skip to content</a>
@@ -1355,7 +1570,7 @@ button { font: inherit; color: inherit; }
 <section id="opening" class="slide" data-8b-section="opening" aria-labelledby="opening-title">
   <div class="op-stage">
     <div class="op-intro"><div class="op-drift"><div class="op-zoom">
-      <picture><source media="(max-width: 767px)" srcset="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=780&amp;h=1340&amp;q=60" width="780" height="1340"><img srcset="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=860&amp;q=60 860w, https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1380&amp;q=60 1380w" sizes="(max-width: 767px) 286px, 108vw" style="background:#260c0c" class="op-photo" src="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1380&amp;q=60" alt="A young woman lit in red, strands of dark hair falling across her face" width="1600" height="1374" fetchpriority="high"></picture>
+      <picture><source media="(max-width: 767px)" srcset="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=780&amp;h=1340&amp;q=60" width="780" height="1340"><img srcset="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=860&amp;q=60 860w, https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1380&amp;q=60 1380w" sizes="(max-width: 767px) 286px, 108vw" class="op-photo" src="https://images.unsplash.com/photo-1733241712811-97dbba75bbd0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwd29tYW4lMjByZWQlMjBwb3J0cmFpdHxlbnwxfDB8fHwxNzkxMjMyMjQxfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1380&amp;q=60" alt="A young woman lit in red, strands of dark hair falling across her face" width="1600" height="1374" fetchpriority="high"></picture>
     </div></div></div>
     <div class="op-shade"></div>
   </div>
@@ -1402,7 +1617,7 @@ button { font: inherit; color: inherit; }
         <a class="m-link" href="#lineup">Who plays when</a>
       </div>
     </div>
-    <ol class="op-rings" aria-label="Festival day schedule">
+    <ol class="op-rings" data-8b-items=":scope > li" data-8b-fixed="9" aria-label="Festival day schedule">
       <li class="m-ring" style="--i:0;--col:0;--row:0"><span class="m-ring__time">12:00</span><span class="m-ring__label">Gates open</span></li>
       <li class="m-ring" style="--i:1;--col:1;--row:0"><span class="m-ring__time">13:00</span><span class="m-ring__label">Cover stage</span></li>
       <li class="m-ring" style="--i:2;--col:2;--row:0"><span class="m-ring__time">14:30</span><span class="m-ring__label">Dance battle</span></li>
@@ -1423,31 +1638,31 @@ button { font: inherit; color: inherit; }
 <section id="lineup" class="slide" data-8b-section="lineup" aria-labelledby="lineup-title">
   <div class="lu-head wrap">
     <h2 class="m-text-3" id="lineup-title" data-8b-motion="heat">On the bill</h2>
-    <p class="lu-lead m-text-5" data-8b-motion="rise">Five headline acts across two nights, plus fourteen crews, DJs and rookies on the cover stage. Set times go live two weeks before the gates open.</p>
+    <p class="lu-lead m-text-5" data-8b-motion="rise" data-8b-enter="86%">Five headline acts across two nights, plus fourteen crews, DJs and rookies on the cover stage. Set times go live two weeks before the gates open.</p>
   </div>
-  <ol class="lu-list">
+  <ol class="lu-list" data-8b-items=":scope > li">
     <li class="lu-row">
-      <figure class="lu-face"><img style="background:#c0c0c0" src="https://images.unsplash.com/photo-1687298703924-0d11be697d8b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=140&amp;q=60" alt="Portrait of a young woman with slicked-back hair and red lips, looking over a bare shoulder" width="1600" height="2400" loading="lazy"></figure>
+      <figure class="lu-face"><img src="https://images.unsplash.com/photo-1687298703924-0d11be697d8b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=60&amp;q=60" alt="Portrait of a young woman with slicked-back hair and red lips, looking over a bare shoulder" width="1600" height="2400" loading="lazy"></figure>
       <div class="lu-name-box"><h3 class="lu-name m-text-2" style="--len:9">Nova Nine</h3></div>
       <p class="lu-when m-text-4"><span>Saturday 12 June</span><span>Main stage · 21:00</span></p>
     </li>
     <li class="lu-row">
-      <figure class="lu-face"><img style="background:#d9d9d9" src="https://images.unsplash.com/photo-1684598273404-2d94d7a7ce2f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=140&amp;q=60" alt="Portrait of a young woman in a black slip dress against a pale wall" width="1600" height="2032" loading="lazy"></figure>
+      <figure class="lu-face"><img src="https://images.unsplash.com/photo-1684598273404-2d94d7a7ce2f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=60&amp;q=60" alt="Portrait of a young woman in a black slip dress against a pale wall" width="1600" height="2032" loading="lazy"></figure>
       <div class="lu-name-box"><h3 class="lu-name m-text-2" style="--len:9">Seora Kim</h3></div>
       <p class="lu-when m-text-4"><span>Sunday 13 June</span><span>Main stage · 20:30</span></p>
     </li>
     <li class="lu-row">
-      <figure class="lu-face"><img style="background:#c0c0c0" src="https://images.unsplash.com/photo-1611403119860-57c4937ef987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=140&amp;q=60" alt="A young man in a white shirt laughing against a weathered concrete wall" width="1600" height="2398" loading="lazy"></figure>
+      <figure class="lu-face"><img src="https://images.unsplash.com/photo-1611403119860-57c4937ef987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8a29yZWFuJTIwc2luZ2VyJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjI4OXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=60&amp;q=60" alt="A young man in a white shirt laughing against a weathered concrete wall" width="1600" height="2398" loading="lazy"></figure>
       <div class="lu-name-box"><h3 class="lu-name m-text-2" style="--len:9">Halo Kids</h3></div>
       <p class="lu-when m-text-4"><span>Saturday 12 June</span><span>Main stage · 19:00</span></p>
     </li>
     <li class="lu-row">
-      <figure class="lu-face"><img style="background:#262626" src="https://images.unsplash.com/photo-1619193597120-1d1edb42e34b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwbWFuJTIwc3VpdCUyMHBvcnRyYWl0fGVufDF8MXx8fDE3OTEyMzIyOTF8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=140&amp;q=60" alt="A young singer in a black top half hidden behind dark purple flowers" width="1600" height="2400" loading="lazy"></figure>
+      <figure class="lu-face"><img src="https://images.unsplash.com/photo-1619193597120-1d1edb42e34b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8a29yZWFuJTIwbWFuJTIwc3VpdCUyMHBvcnRyYWl0fGVufDF8MXx8fDE3OTEyMzIyOTF8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=60&amp;q=60" alt="A young singer in a black top half hidden behind dark purple flowers" width="1600" height="2400" loading="lazy"></figure>
       <div class="lu-name-box"><h3 class="lu-name m-text-2" style="--len:9">Moon June</h3></div>
       <p class="lu-when m-text-4"><span>Sunday 13 June</span><span>Cover stage · 18:00</span></p>
     </li>
     <li class="lu-row">
-      <figure class="lu-face"><img style="background:#262640" src="https://images.unsplash.com/photo-1611459293885-f8e692ab0356?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8YXNpYW4lMjBtYW4lMjBwb3J0cmFpdCUyMHJlZHxlbnwxfDF8fHwxNzkxMjMyMjkwfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=140&amp;q=60" alt="A young man in round glasses and an orange shirt standing in tall grass" width="1600" height="2398" loading="lazy"></figure>
+      <figure class="lu-face"><img src="https://images.unsplash.com/photo-1611459293885-f8e692ab0356?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8YXNpYW4lMjBtYW4lMjBwb3J0cmFpdCUyMHJlZHxlbnwxfDF8fHwxNzkxMjMyMjkwfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=60&amp;q=60" alt="A young man in round glasses and an orange shirt standing in tall grass" width="1600" height="2398" loading="lazy"></figure>
       <div class="lu-name-box"><h3 class="lu-name m-text-2" style="--len:8">Parallel</h3></div>
       <p class="lu-when m-text-4"><span>Saturday 12 June</span><span>Battle floor · 17:30</span></p>
     </li>
@@ -1457,8 +1672,8 @@ button { font: inherit; color: inherit; }
 <!-- battle: split screen: two sides with a moving VS line (demo: a dance crew battle) (animation: scene:battle) -->
 <section id="battle" class="slide" data-8b-section="battle" aria-labelledby="battle-title">
   <div class="bt-stage">
-    <figure class="bt-side bt-side--a"><img style="background:#404040" src="https://images.unsplash.com/photo-1611418608118-e6afdb56c35e?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1280&amp;q=60" alt="A dancer in a white hoodie leaps above a packed battle circle" width="1600" height="1280" loading="lazy"></figure>
-    <figure class="bt-side bt-side--b"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1621976498727-9e5d56476276?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1530&amp;q=60" alt="A crew of dancers bent low in unison on a dark stage" width="1600" height="1067" loading="lazy"></figure>
+    <figure class="bt-side bt-side--a"><img src="https://images.unsplash.com/photo-1611418608118-e6afdb56c35e?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1280&amp;q=60" alt="A dancer in a white hoodie leaps above a packed battle circle" width="1600" height="1280" loading="lazy"></figure>
+    <figure class="bt-side bt-side--b"><img src="https://images.unsplash.com/photo-1621976498727-9e5d56476276?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=1530&amp;q=60" alt="A crew of dancers bent low in unison on a dark stage" width="1600" height="1067" loading="lazy"></figure>
     <div class="bt-shade"></div>
     <div class="bt-line" aria-hidden="true"><span class="bt-vs">VS</span></div>
     <div class="bt-copy">
@@ -1467,7 +1682,7 @@ button { font: inherit; color: inherit; }
         <p>Saturday 14:30 on the battle floor. Last year's final, rematched: eight crews, three rounds, one circle, and the crowd votes with lightsticks.</p>
         <a data-8b-placeholder="email" class="bt-enter m-link" href="mailto:battle@ondo.example">Enter your crew for 2027</a>
       </div>
-      <ol class="bt-rounds">
+      <ol class="bt-rounds" data-8b-items=":scope > li" data-8b-fixed="3">
         <li class="bt-round"><span class="m-text-4">Round 1</span><span>Footwork</span></li>
         <li class="bt-round"><span class="m-text-4">Round 2</span><span>Choreo</span></li>
         <li class="bt-round"><span class="m-text-4">Final</span><span>Freestyle</span></li>
@@ -1481,21 +1696,21 @@ button { font: inherit; color: inherit; }
 <section id="zones" class="slide" data-8b-section="zones" aria-labelledby="zones-title">
   <div class="zn-head wrap">
     <h2 class="m-text-3" id="zones-title" data-8b-motion="heat">One hall, four heats</h2>
-    <p class="m-text-5" data-8b-motion="rise">Pier Arena opens wall to wall. Four zones run side by side all day, so you can leave the concert queue for tteokbokki and still make the chorus.</p>
+    <p class="m-text-5" data-8b-motion="rise" data-8b-enter="86%">Pier Arena opens wall to wall. Four zones run side by side all day, so you can leave the concert queue for tteokbokki and still make the chorus.</p>
   </div>
   <div class="zn-grid wrap">
     <div class="zn-plan-col">
       <div class="zn-plan" role="img" aria-label="Plan of Pier Arena with four zones: the main stage, the battle floor, the beauty lab and the food street">
         <div class="zn-map">
           <span class="zn-hall"></span>
-          <figure class="zn-spot" style="--x:33%;--y:33%;--s:40%"><img style="background:#a60c0c" src="https://images.unsplash.com/photo-1682447404920-4be1294c2854?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=360&amp;q=60" alt="" width="1600" height="1067" loading="lazy"><figcaption class="m-badge">Main stage</figcaption></figure>
-          <figure class="zn-spot" style="--x:73%;--y:31%;--s:27%"><img style="background:#262626" src="https://images.unsplash.com/photo-1588540111535-2b7ef1eb7833?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=240&amp;q=60" alt="" width="1600" height="1065" loading="lazy"><figcaption class="m-badge">Battle floor</figcaption></figure>
-          <figure class="zn-spot" style="--x:29%;--y:74%;--s:25%"><img style="background:#f34040" src="https://images.unsplash.com/photo-1626895872564-b691b6877b83?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8cmVkJTIwbGlwc3RpY2slMjBiZWF1dHklMjBjbG9zZSUyMHVwfGVufDF8MXx8fDE3OTEyMzIzMjF8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=150&amp;q=60" alt="" width="1600" height="2000" loading="lazy"><figcaption class="m-badge">Beauty lab</figcaption></figure>
-          <figure class="zn-spot" style="--x:68%;--y:70%;--s:32%"><img style="background:#404040" src="https://images.unsplash.com/photo-1545324053-41b04f1a8e8a?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=290&amp;q=60" alt="" width="1600" height="1067" loading="lazy"><figcaption class="m-badge">Food street</figcaption></figure>
+          <figure class="zn-spot" style="--x:33%;--y:33%;--s:40%"><img src="https://images.unsplash.com/photo-1682447404920-4be1294c2854?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=360&amp;q=60" alt="" width="1600" height="1067" loading="lazy"><figcaption class="m-badge">Main stage</figcaption></figure>
+          <figure class="zn-spot" style="--x:73%;--y:31%;--s:27%"><img src="https://images.unsplash.com/photo-1588540111535-2b7ef1eb7833?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8c3RyZWV0JTIwZGFuY2UlMjBjcmV3fGVufDF8MHx8fDE3OTEyMzIyOTd8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=240&amp;q=60" alt="" width="1600" height="1065" loading="lazy"><figcaption class="m-badge">Battle floor</figcaption></figure>
+          <figure class="zn-spot" style="--x:29%;--y:74%;--s:25%"><img src="https://images.unsplash.com/photo-1626895872564-b691b6877b83?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8cmVkJTIwbGlwc3RpY2slMjBiZWF1dHklMjBjbG9zZSUyMHVwfGVufDF8MXx8fDE3OTEyMzIzMjF8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=150&amp;q=60" alt="" width="1600" height="2000" loading="lazy"><figcaption class="m-badge">Beauty lab</figcaption></figure>
+          <figure class="zn-spot" style="--x:68%;--y:70%;--s:32%"><img src="https://images.unsplash.com/photo-1545324053-41b04f1a8e8a?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=290&amp;q=60" alt="" width="1600" height="1067" loading="lazy"><figcaption class="m-badge">Food street</figcaption></figure>
         </div>
       </div>
     </div>
-    <ol class="zn-items">
+    <ol class="zn-items" data-8b-items=":scope > li" data-8b-fixed="4">
       <li class="zn-item">
         <h3 class="m-text-6">Main stage</h3>
         <p class="m-badge">12:00 – 23:00</p>
@@ -1522,14 +1737,14 @@ button { font: inherit; color: inherit; }
 <!-- looks: sideways track of three items, each a tall photo with times, name, text and three steps (demo: make-up looks) (animation: scene:looks) -->
 <section id="looks" class="slide slide--light" data-8b-section="looks" aria-labelledby="looks-title">
   <div class="lk-head wrap">
-    <h2 class="m-text-3" id="looks-title" data-8b-motion="rise">Idol looks</h2>
-    <p class="m-text-5" data-8b-motion="rise">The beauty lab runs three looks on repeat, twenty minutes each, with every product on the counter to try and take home.</p>
+    <h2 class="m-text-3" id="looks-title" data-8b-motion="rise" data-8b-enter="86%">Idol looks</h2>
+    <p class="m-text-5" data-8b-motion="rise" data-8b-enter="86%">The beauty lab runs three looks on repeat, twenty minutes each, with every product on the counter to try and take home.</p>
   </div>
   <div class="lk-scroll">
     <div class="lk-viewport">
-      <ol class="lk-track">
+      <ol class="lk-track" data-8b-items=":scope > li" data-8b-fixed="3">
         <li class="lk-panel">
-          <figure class="lk-photo"><img style="background:#c0a68c" src="https://images.unsplash.com/photo-1612982799870-b5528fea59a8?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTV8fHBhbGUlMjBza2luJTIwcmVkJTIwbGlwc3xlbnwxfDF8fHwxNzkxMjcyNDQ0fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=530&amp;q=60" alt="Close-up of a pale face with clear, dewy skin, grey eyes and a glossy coral-red lip" width="1600" height="2397" loading="lazy"></figure>
+          <figure class="lk-photo"><img src="https://images.unsplash.com/photo-1612982799870-b5528fea59a8?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTV8fHBhbGUlMjBza2luJTIwcmVkJTIwbGlwc3xlbnwxfDF8fHwxNzkxMjcyNDQ0fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=530&amp;q=60" alt="Close-up of a pale face with clear, dewy skin, grey eyes and a glossy coral-red lip" width="1600" height="2397" loading="lazy"></figure>
           <div class="lk-text">
             <span class="lk-badge m-badge">12:30 · 16:00</span>
             <h3 class="m-text-6">Glass skin</h3>
@@ -1542,7 +1757,7 @@ button { font: inherit; color: inherit; }
           </div>
         </li>
         <li class="lk-panel">
-          <figure class="lk-photo"><img style="background:#a68c8c" src="https://images.unsplash.com/photo-1716913887731-e899c78297e0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MjF8fG1hdHRlJTIwcmVkJTIwbGlwJTIwbWFrZXVwJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTI3MDAwNnww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=550&amp;q=60" alt="Portrait of a woman with brown eyes and a matte red lip, her chin on her hand, in a white jacket" width="1600" height="1936" loading="lazy"></figure>
+          <figure class="lk-photo"><img src="https://images.unsplash.com/photo-1716913887731-e899c78297e0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MjF8fG1hdHRlJTIwcmVkJTIwbGlwJTIwbWFrZXVwJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTI3MDAwNnww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=550&amp;q=60" alt="Portrait of a woman with brown eyes and a matte red lip, her chin on her hand, in a white jacket" width="1600" height="1936" loading="lazy"></figure>
           <div class="lk-text">
             <span class="lk-badge m-badge">13:30 · 17:00</span>
             <h3 class="m-text-6">Stage red</h3>
@@ -1555,7 +1770,7 @@ button { font: inherit; color: inherit; }
           </div>
         </li>
         <li class="lk-panel">
-          <figure class="lk-photo"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1706821114509-2065d0dd9ff8?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8YXNpYW4lMjBiZWF1dHklMjBwb3J0cmFpdCUyMHJlZCUyMGJhY2tncm91bmR8ZW58MXwwfHx8MTc5MTIzMjI1N3ww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=830&amp;q=60" alt="A woman in red light, eyes closed, her hair swinging across her shoulder" width="1600" height="1280" loading="lazy"></figure>
+          <figure class="lk-photo"><img src="https://images.unsplash.com/photo-1706821114509-2065d0dd9ff8?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8YXNpYW4lMjBiZWF1dHklMjBwb3J0cmFpdCUyMHJlZCUyMGJhY2tncm91bmR8ZW58MXwwfHx8MTc5MTIzMjI1N3ww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=830&amp;q=60" alt="A woman in red light, eyes closed, her hair swinging across her shoulder" width="1600" height="1280" loading="lazy"></figure>
           <div class="lk-text">
             <span class="lk-badge m-badge">14:30 · 18:30</span>
             <h3 class="m-text-6">After dark</h3>
@@ -1576,11 +1791,11 @@ button { font: inherit; color: inherit; }
   <div class="fd-grid wrap">
     <div class="fd-head">
       <h2 class="m-text-3" id="food-title" data-8b-motion="heat">Food street</h2>
-      <p class="m-text-5" data-8b-motion="rise">Twenty stalls along the river wall, cards and phones only. Everything on the board costs less than a lightstick.</p>
+      <p class="m-text-5" data-8b-motion="rise" data-8b-enter="86%">Twenty stalls along the river wall, cards and phones only. Everything on the board costs less than a lightstick.</p>
     </div>
-    <figure class="fd-wide"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1624176193860-dd7866e5a8aa?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=570&amp;q=60" alt="Trays of Korean street food under warm light: skewers, fried dumplings and fish cakes" width="1600" height="939" loading="lazy"></figure>
-    <figure class="fd-ring" data-8b-motion="ringdraw"><img style="background:#262626" src="https://images.unsplash.com/photo-1552912470-ee2e96439539?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="A cook tending a crowded street-food stall at night" width="1600" height="1263" loading="lazy"></figure>
-    <ul class="fd-board" data-8b-motion="rise">
+    <figure class="fd-wide"><img src="https://images.unsplash.com/photo-1624176193860-dd7866e5a8aa?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=570&amp;q=60" alt="Trays of Korean street food under warm light: skewers, fried dumplings and fish cakes" width="1600" height="939" loading="lazy"></figure>
+    <figure class="fd-ring" data-8b-motion="ringdraw" data-8b-enter="90%"><img src="https://images.unsplash.com/photo-1552912470-ee2e96439539?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8a29yZWFuJTIwc3RyZWV0JTIwZm9vZHxlbnwxfDB8fHwxNzkxMjMyMzIyfDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=710&amp;q=60" alt="A cook tending a crowded street-food stall at night" width="1600" height="1263" loading="lazy"></figure>
+    <ul class="fd-board" data-8b-items=":scope > li" data-8b-motion="rise" data-8b-enter="86%">
       <li class="fd-item"><span class="fd-ko m-text-4" lang="ko">떡볶이</span><span class="fd-name m-text-6">Tteokbokki</span><span class="fd-note">Rice cakes in gochujang, fish cake, a soft egg</span><span class="fd-price m-text-6">€7</span><span class="fd-rule" data-rule></span></li>
       <li class="fd-item"><span class="fd-ko m-text-4" lang="ko">핫도그</span><span class="fd-name m-text-6">Corn dog</span><span class="fd-note">Mozzarella inside, sugar crust, mustard</span><span class="fd-price m-text-6">€6</span><span class="fd-rule" data-rule></span></li>
       <li class="fd-item"><span class="fd-ko m-text-4" lang="ko">호떡</span><span class="fd-name m-text-6">Hotteok</span><span class="fd-note">Pan-fried pancake, brown sugar and seeds</span><span class="fd-price m-text-6">€4</span><span class="fd-rule" data-rule></span></li>
@@ -1592,21 +1807,21 @@ button { font: inherit; color: inherit; }
 </section>
 <!-- partners: for sponsors: audience in four columns with bars sized by share, a portrait and a deck button (animation: scene:partners) -->
 <section id="partners" class="slide" data-8b-section="partners" aria-labelledby="partners-title">
-  <figure class="pt-man"><img style="background:#262626" src="https://images.unsplash.com/photo-1543132220-4bf3de6e10ae?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YXNpYW4lMjBtYW4lMjBibGFjayUyMHN1aXQlMjBmYXNoaW9uJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjMyMXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=580&amp;q=60" alt="A young man in a black blazer and white shirt looking straight at the camera" width="1600" height="2400" loading="lazy"></figure>
+  <figure class="pt-man"><img src="https://images.unsplash.com/photo-1543132220-4bf3de6e10ae?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YXNpYW4lMjBtYW4lMjBibGFjayUyMHN1aXQlMjBmYXNoaW9uJTIwcG9ydHJhaXR8ZW58MXwxfHx8MTc5MTIzMjMyMXww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=620&amp;q=60" alt="A young man in a black blazer and white shirt looking straight at the camera" width="1600" height="2400" loading="lazy"></figure>
   <div class="pt-top wrap">
     <h2 class="m-text-3" id="partners-title">Who fills<br>the hall</h2>
     <div class="pt-side">
       <ul class="pt-avatars" aria-label="Creators who covered ONDO last year">
-        <li data-8b-motion="ringdraw"><img style="background:#d90c0c" src="https://images.unsplash.com/photo-1766650577318-8caa905fb9e9?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8aGlwJTIwaG9wJTIwZGFuY2VyJTIwcmVkfGVufDF8MXx8fDE3OTEyMzIyOTh8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=100&amp;q=60" alt="A creator in sunglasses making a hand sign in red light" width="1600" height="2233" loading="lazy"></li>
-        <li data-8b-motion="ringdraw"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1616189221668-386d14f76678?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=150&amp;q=60" alt="A creator in a white dress raising a glass at a night party" width="1600" height="1069" loading="lazy"></li>
-        <li data-8b-motion="ringdraw"><img style="background:#d9d9d9" src="https://images.unsplash.com/photo-1758272134331-c953bea718a4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=180&amp;q=60" alt="Two friends taking a selfie against city lights" width="1600" height="900" loading="lazy"></li>
-        <li class="pt-plus" data-8b-motion="ringdraw"><span aria-hidden="true">+</span><span class="visually-hidden">and more than a hundred others</span></li>
+        <li data-8b-motion="ringdraw" data-8b-enter="90%"><img src="https://images.unsplash.com/photo-1766650577318-8caa905fb9e9?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8aGlwJTIwaG9wJTIwZGFuY2VyJTIwcmVkfGVufDF8MXx8fDE3OTEyMzIyOTh8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=180&amp;q=60" alt="A creator in sunglasses making a hand sign in red light" width="1600" height="2233" loading="lazy"></li>
+        <li data-8b-motion="ringdraw" data-8b-enter="90%"><img src="https://images.unsplash.com/photo-1616189221668-386d14f76678?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=260&amp;q=60" alt="A creator in a white dress raising a glass at a night party" width="1600" height="1069" loading="lazy"></li>
+        <li data-8b-motion="ringdraw" data-8b-enter="90%"><img src="https://images.unsplash.com/photo-1758272134331-c953bea718a4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=310&amp;q=60" alt="Two friends taking a selfie against city lights" width="1600" height="900" loading="lazy"></li>
+        <li class="pt-plus" data-8b-motion="ringdraw" data-8b-enter="90%"><span aria-hidden="true">+</span><span class="visually-hidden">and more than a hundred others</span></li>
       </ul>
       <p class="m-text-5">Eighteen thousand visitors over two days, and nearly all of them film something. Bring a product, a booth or a stage moment to the people who will share it.</p>
       <a data-8b-placeholder="email" class="m-btn" href="mailto:partners@ondo.example"><span class="m-btn__label">Request the partner deck</span></a>
     </div>
   </div>
-  <ol class="pt-cols wrap">
+  <ol class="pt-cols wrap" data-8b-items=":scope > li">
     <li class="pt-col" style="--share:40">
       <h3 class="m-text-6">K-pop fandoms</h3>
       <ul class="pt-points"><li>Age 14–30, loyal and loud</li><li>They post what they love, brands included</li></ul>
@@ -1633,38 +1848,38 @@ button { font: inherit; color: inherit; }
 <section id="fanwall" class="slide" data-8b-section="fanwall" aria-labelledby="fanwall-title">
   <div class="fw-head wrap">
     <h2 class="m-text-3" id="fanwall-title" data-8b-motion="heat">The photo wall</h2>
-    <p class="m-text-5" data-8b-motion="rise">At 21:00 the wall by the river lights up. Every photo taken there lands on this page by midnight, tagged #ondoheat.</p>
+    <p class="m-text-5" data-8b-motion="rise" data-8b-enter="86%">At 21:00 the wall by the river lights up. Every photo taken there lands on this page by midnight, tagged #ondoheat.</p>
   </div>
-  <ul class="fw-wall wrap">
-    <li class="fw-item"><img style="background:#f3a68c" src="https://images.unsplash.com/photo-1546708770-589dab7b22c7?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=510&amp;q=60" alt="Hands raised towards a stage washed in pink smoke" width="1600" height="1143" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item fw-item--round"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1617622180031-0aa87235d893?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="Two friends laughing together at a party" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1559228461-4fa1e7eb677c?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=540&amp;q=60" alt="A crowd silhouetted against red stage lights" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item fw-item--round"><img style="background:#262626" src="https://images.unsplash.com/photo-1787990670507-33456221b940?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="A group of friends squeezing into a selfie in a dim restaurant" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item fw-item--round"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1556340346-5e30da977c4d?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="A crowd singing along with their phones up" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item"><img style="background:#f3f3f3" src="https://images.unsplash.com/photo-1508360566237-303a44e4d14b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=540&amp;q=60" alt="Flames bursting over a stage in front of a cheering crowd" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item fw-item--round"><img style="background:#262640" src="https://images.unsplash.com/photo-1621407808155-770a27217758?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=360&amp;q=60" alt="People watching a concert at night under white beams" width="1600" height="1200" loading="lazy"><span class="fw-grade"></span></li>
-    <li class="fw-item"><img style="background:#260c26" src="https://images.unsplash.com/photo-1618901882475-4a8ce888ffda?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=640&amp;q=60" alt="Confetti falling over a festival crowd at night" width="1600" height="900" loading="lazy"><span class="fw-grade"></span></li>
+  <ul class="fw-wall wrap" data-8b-items=":scope > li">
+    <li class="fw-item"><img src="https://images.unsplash.com/photo-1546708770-589dab7b22c7?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=510&amp;q=60" alt="Hands raised towards a stage washed in pink smoke" width="1600" height="1143" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item fw-item--round"><img src="https://images.unsplash.com/photo-1617622180031-0aa87235d893?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="Two friends laughing together at a party" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item"><img src="https://images.unsplash.com/photo-1559228461-4fa1e7eb677c?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8Y29uY2VydCUyMHN0YWdlJTIwcmVkJTIwbGlnaHRzJTIwY3Jvd2R8ZW58MXwwfHx8MTc5MTIzMjI5OHww&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=540&amp;q=60" alt="A crowd silhouetted against red stage lights" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item fw-item--round"><img src="https://images.unsplash.com/photo-1787990670507-33456221b940?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8ZnJpZW5kcyUyMHNlbGZpZSUyMG5pZ2h0fGVufDF8MHx8fDE3OTEyMzIzMjJ8MA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="A group of friends squeezing into a selfie in a dim restaurant" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item fw-item--round"><img src="https://images.unsplash.com/photo-1556340346-5e30da977c4d?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=410&amp;q=60" alt="A crowd singing along with their phones up" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item"><img src="https://images.unsplash.com/photo-1508360566237-303a44e4d14b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=540&amp;q=60" alt="Flames bursting over a stage in front of a cheering crowd" width="1600" height="1067" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item fw-item--round"><img src="https://images.unsplash.com/photo-1621407808155-770a27217758?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=360&amp;q=60" alt="People watching a concert at night under white beams" width="1600" height="1200" loading="lazy"><span class="fw-grade"></span></li>
+    <li class="fw-item"><img src="https://images.unsplash.com/photo-1618901882475-4a8ce888ffda?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y29uY2VydCUyMGNyb3dkJTIwbGlnaHRzdGlja3xlbnwxfDB8fHwxNzkxMjMyMjk5fDA&amp;ixlib=rb-4.1.0&amp;auto=format&amp;fit=crop&amp;w=640&amp;q=60" alt="Confetti falling over a festival crowd at night" width="1600" height="900" loading="lazy"><span class="fw-grade"></span></li>
   </ul>
   <p class="fw-tag wrap m-text-4">Photos from last year's wall, shared with permission</p>
 </section>
 <!-- tickets: three ticket tiers as wristband passes with prices and buttons (animation: scene:tickets) -->
 <section id="tickets" class="slide slide--light" data-8b-section="tickets" aria-labelledby="tickets-title">
   <div class="tk-head wrap">
-    <h2 class="m-text-3" id="tickets-title" data-8b-motion="rise">Passes</h2>
-    <p class="m-text-5" data-8b-motion="rise">Wristbands are posted three weeks before the festival and scanned at the gate. Prices include all fees.</p>
+    <h2 class="m-text-3" id="tickets-title" data-8b-motion="rise" data-8b-enter="86%">Passes</h2>
+    <p class="m-text-5" data-8b-motion="rise" data-8b-enter="86%">Wristbands are posted three weeks before the festival and scanned at the gate. Prices include all fees.</p>
   </div>
-  <ol class="tk-passes wrap">
-    <li class="tk-pass tk-pass--day">
+  <ol class="tk-passes wrap" data-8b-items=":scope > li" data-8b-fixed="3">
+    <li class="tk-pass tk-pass--day" style="--tickets-li-tk-pass-translate-from: -10%; --tickets-li-tk-pass-rotate-from: -5deg">
       <div class="tk-top"><span class="m-badge">Saturday or Sunday</span><h3 class="tk-name m-text-3">Day pass</h3></div>
       <ul class="tk-list"><li>All four zones for one day</li><li>Standing floor at the main stage</li><li>Beauty lab walk-ins</li></ul>
       <div class="tk-stub"><p class="tk-price">€69</p><a class="m-btn" href="#contact"><span class="m-btn__label">Choose day</span></a></div>
     </li>
-    <li class="tk-pass tk-pass--weekend">
+    <li class="tk-pass tk-pass--weekend" style="--tickets-li-tk-pass-translate-from: 10%; --tickets-li-tk-pass-rotate-from: 5deg">
       <div class="tk-top"><span class="m-badge">Both days</span><h3 class="tk-name m-text-3">Weekend</h3></div>
       <ul class="tk-list"><li>Both days, every zone</li><li>Early entry at 11:30</li><li>A bleacher seat at the battle</li></ul>
       <div class="tk-stub"><p class="tk-price">€119</p><a class="m-btn" href="#contact"><span class="m-btn__label">Choose weekend</span></a></div>
     </li>
-    <li class="tk-pass tk-pass--pit">
+    <li class="tk-pass tk-pass--pit" style="--tickets-li-tk-pass-translate-from: -10%; --tickets-li-tk-pass-rotate-from: -5deg">
       <div class="tk-top"><span class="m-badge">Both days · 400 only</span><h3 class="tk-name m-text-3">Front pit</h3></div>
       <ul class="tk-list"><li>The pit in front of the main stage</li><li>Saturday soundcheck at 16:00</li><li>A reserved slot at the photo wall</li></ul>
       <div class="tk-stub"><p class="tk-price">€189</p><a class="m-btn" href="#contact"><span class="m-btn__label">Choose pit</span></a></div>
@@ -1680,7 +1895,7 @@ button { font: inherit; color: inherit; }
       <p>Still unsure about something? The ticket desk answers within a day.</p>
       <a data-8b-placeholder="email" class="m-link" href="mailto:hello@ondo.example">hello@ondo.example</a>
     </div>
-    <div class="fq-list" data-8b-motion="rise">
+    <div class="fq-list" data-8b-items=":scope > details" data-8b-motion="rise" data-8b-enter="86%">
       <details class="fq-item m-surface"><summary class="m-text-6">Is there an age limit?</summary><p>All ages are welcome. Under-16s need an adult with them on the standing floor, and under-12s go free with a paying adult.</p></details>
       <details class="fq-item m-surface"><summary class="m-text-6">Can I bring my lightstick?</summary><p>Yes: official lightsticks, banners up to A3 and one small bag. No poles, chairs or cameras with detachable lenses.</p></details>
       <details class="fq-item m-surface"><summary class="m-text-6">Do I need cash?</summary><p>No. Food street and the merch stand take cards and phones only, and there is a top-up point by the gate for prepaid cards.</p></details>
@@ -1719,121 +1934,6 @@ button { font: inherit; color: inherit; }
     <small>© 2027 ONDO Festival B.V. · Rotterdam · Design: <a href="https://8b.com/" style="color:inherit" data-8b-credit>8B</a></small>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
-<script data-8b-part="motion-queue">
-(() => {
-  'use strict';
-  const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
-  const parsed = document.readyState === 'loading' ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true })) : Promise.resolve();
-  const ready = () => Promise.all([fonts, parsed]).then(() => firsts);
-  const nextTask = () => window.scheduler?.yield?.() ?? new Promise(resolve => setTimeout(resolve));
-  const refresh = () => {
-    if (typeof window.refreshScroll === 'function') return window.refreshScroll();
-    window.ScrollTrigger?.sort(); window.ScrollTrigger?.refresh();
-  };
-  const run = (setup, name) => {
-    for (const trigger of window.ScrollTrigger?.getAll() || []) if (!trigger.end && window.ScrollTrigger.getAll().includes(trigger)) trigger.refresh(0, 1);
-    const context = window.gsap.context(() => {});
-    const log = new MutationObserver(() => {});
-    log.observe(document.documentElement, { attributes: true, attributeOldValue: true, subtree: true });
-    let failure = null, records;
-    try { context.add(() => { try { setup(); } catch (error) { failure = error; } }); }
-    finally { records = log.takeRecords(); log.disconnect(); }
-    if (!failure) return true;
-    try { context.revert(); } catch (error) { console.error(name, 'revert failed', error); }
-    for (const { target, attributeName, oldValue } of records.reverse()) {
-      const now = target.getAttribute(attributeName);
-      if (oldValue == null) { if (now != null) target.removeAttribute(attributeName); }
-      else if (now !== oldValue) target.setAttribute(attributeName, oldValue);
-    }
-    console.error(name, failure);
-    return false;
-  };
-  let firsts = Promise.resolve(), tail = null, pending = 0, lazy = null, building = 0, firstCount = 0;
-  window.motionReady = ready();
-  parsed.then(() => { if (firstCount && !tail) firsts.then(refresh); });
-  window.queueMotion = (setup, { first = false, near, id } = {}) => {
-    if (!window.gsap || typeof setup !== 'function') return;
-    const name = id || document.currentScript?.getAttribute('data-8b-part') || 'motion';
-    if (near instanceof Element && window.IntersectionObserver) {
-      const watch = new IntersectionObserver(entries => {
-        if (!entries.some(entry => entry.isIntersecting)) return;
-        watch.disconnect();
-        building++;
-        lazy = (lazy || ready()).then(nextTask).then(() => run(setup, name)).finally(() => { if (!--building) refresh(); });
-      }, { rootMargin: '100% 0px' });
-      watch.observe(near);
-      return;
-    }
-    if (first) { firstCount++; firsts = firsts.then(() => fonts).then(() => { if (!run(setup, name)) refresh(); }); }
-    else {
-      pending++;
-      tail = (tail || ready()).then(nextTask).then(() => run(setup, name))
-        .finally(() => { if (!--pending) refresh(); });
-    }
-    window.motionReady = Promise.all([firsts, tail]);
-  };
-})();
-</script>
-<script data-8b-part="page-init">
-gsap.registerPlugin(ScrollTrigger);
-function navHeight() {
-  const nav = document.querySelector('[data-8b-section="navigation"]');
-  return nav ? nav.getBoundingClientRect().height : 0;
-}
-function refreshScroll() {
-  if (window.lenis) window.lenis.options.anchors = { offset: -navHeight() };
-  ScrollTrigger.sort();
-  ScrollTrigger.refresh();
-}
-gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-  const lenis = window.lenis = new Lenis({ lerp: .11, anchors: { offset: -navHeight() } });
-  const tick = time => lenis.raf(time * 1000);
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(tick);
-  gsap.ticker.lagSmoothing(0);
-  return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); lenis.destroy(); window.lenis = null; };
-});
-</script>
-<script data-8b-part="motion">
-const effects = {
-  heat(element, vars = {}) {
-    return gsap.fromTo(element, { '--heat': 0 }, { '--heat': 1, ease: 'none', ...vars });
-  },
-  rise(element, vars = {}) {
-    const items = element.children.length ? [...element.children] : [element];
-    const rules = element.querySelectorAll('[data-rule]');
-    const timeline = gsap.timeline(vars);
-    timeline.from(items, { y: 34, opacity: 0, duration: .8, ease: 'power3.out', stagger: .09 }, 0);
-    if (rules.length) timeline.from(rules, { scaleX: 0, transformOrigin: '0% 50%', duration: 1, ease: 'power2.inOut', stagger: .09 }, 0);
-    return timeline;
-  },
-  ringdraw(element, vars = {}) {
-    return gsap.timeline(vars).from(element, { scale: 1.35, rotate: -70, opacity: 0, duration: .9, ease: 'power3.out' });
-  }
-};
-const bindings = {
-  heat: { scrub: true, start: 'top 95%', end: 'top 55%' },
-  rise: { once: true, start: 'top 86%' },
-  ringdraw: { once: true, start: 'top 90%' }
-};
-document.querySelectorAll('[data-8b-section]').forEach(section => {
-  Object.keys(effects).forEach(name => {
-    const elements = [...section.querySelectorAll(`[data-8b-motion~="${name}"]`)];
-    if (!elements.length) return;
-    const id = `effect:${name}:${section.id}`;
-    queueMotion(() => gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-      elements.forEach((element, index) => {
-        const { scrub, once, start, end } = bindings[name];
-        const animation = effects[name](element, scrub ? {} : { paused: true });
-        ScrollTrigger.create({ id: `${id}:${index}`, trigger: element, start, end, scrub: scrub ? .4 : false, once: !!once, animation, toggleActions: scrub ? undefined : 'play none none none' });
-      });
-    }), { first: section.getBoundingClientRect().top < innerHeight, id });
-  });
-});
-</script>
 <script data-8b-part="section-script:navigation">
 (() => {
   const nav = document.getElementById('navigation');
@@ -1857,13 +1957,13 @@ document.querySelectorAll('[data-8b-section]').forEach(section => {
   const setOpen = open => {
     menu.hidden = !open;
     openButton.setAttribute('aria-expanded', String(open));
-    if (open) { hidden = false; nav.classList.remove('is-hidden'); window.lenis?.stop(); closeButton.focus(); }
-    else { window.lenis?.start(); openButton.focus(); }
+    if (open) { hidden = false; nav.classList.remove('is-hidden'); window.motionKit?.wheel?.stop(); closeButton.focus(); }
+    else { window.motionKit?.wheel?.start(); openButton.focus(); }
   };
   openButton.addEventListener('click', () => setOpen(true));
   closeButton.addEventListener('click', () => setOpen(false));
   menu.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
-  menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { menu.hidden = true; openButton.setAttribute('aria-expanded', 'false'); window.lenis?.start(); }));
+  menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { menu.hidden = true; openButton.setAttribute('aria-expanded', 'false'); window.motionKit?.wheel?.start(); }));
 })();
 </script>
 <script data-8b-part="section-script:opening">
@@ -1872,172 +1972,133 @@ document.querySelectorAll('[data-8b-section]').forEach(section => {
   new IntersectionObserver(([entry]) => section.classList.toggle('is-offscreen', !entry.isIntersecting)).observe(section.querySelector('.op-one'));
 })();
 </script>
-<script data-8b-part="scene:opening">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('opening');
-    const q = selector => section.querySelector(selector);
-    const rings = [...section.querySelectorAll('.op-rings .m-ring')];
-    gsap.set(q('.op-veil__lid'), { opacity: 0 });
-    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
-      id: 'opening', trigger: section, start: 'top top', end: 'bottom bottom', scrub: .5, invalidateOnRefresh: true
-    }});
-    timeline
-      .fromTo(q('.op-zoom'), { scale: 1, y: 0 }, { scale: 1.18, y: () => innerHeight * (innerWidth < 861 ? .3 : .1), duration: 1 }, 0)
-      .to(q('.op-word--a'), { xPercent: -75, duration: .55, ease: 'power1.in' }, 0)
-      .to(q('.op-word--c'), { xPercent: 55, duration: .55, ease: 'power1.in' }, 0)
-      .to(q('.op-word--b'), { yPercent: -160, rotate: -8, duration: .45, ease: 'power1.in' }, 0)
-      .to(q('.op-upper'), { y: () => -innerHeight * .22, opacity: 0, duration: .35 }, 0)
-      .to(q('.op-lower'), { y: () => -innerHeight * .12, opacity: 0, duration: .3 }, .02)
-      .fromTo(q('.op-veil'), { autoAlpha: 0 }, { autoAlpha: 1, duration: .02 }, .26)
-      .fromTo(q('.op-veil'), { '--grow': 1 }, { '--grow': 0, duration: .72, ease: 'power2.inOut' }, .28)
-      .fromTo(rings, { scale: .35, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, stagger: { each: .035, from: 'center' }, ease: 'power2.out' }, .62)
-      .fromTo(rings.flatMap(ring => [...ring.children]), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .2, stagger: .03 }, .74);
-  });
-}, { first: true, id: 'opening' });
+<script data-8b-part="motion-kit">
+(() => {
+const live = document.documentElement.hasAttribute('data-8b-live');
+const measures = new Set();
+let queued = false;
+const run = fn => { try { fn(); } catch (error) { console.error('[motion-kit] measure failed', error); } };
+const remeasure = () => {
+if (queued) return;
+queued = true;
+requestAnimationFrame(() => { queued = false; measures.forEach(run); realign(); });
+};
+const realign = () => document.getAnimations().forEach(animation => {
+if (animation.timeline && animation.timeline !== document.timeline && animation.playState === 'running') { animation.pause(); animation.play(); }
+});
+window.motionKit = {
+live,
+box(element) {
+if (!(element instanceof HTMLElement)) { const r = element.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height }; }
+let x = 0, y = 0, node = element;
+while (node) { x += node.offsetLeft; y += node.offsetTop; node = node.offsetParent; }
+return { x, y, w: element.offsetWidth, h: element.offsetHeight };
+},
+set(element, vars) { for (const [name, value] of Object.entries(vars)) element.style.setProperty(name, String(value)); },
+measure(fn) { if (!live) return; measures.add(fn); run(fn); },
+scene(id, fn) {
+if (!live) return;
+try { fn(); } catch (error) {
+console.error(`[motion-kit] scene ${id} failed; its section stays static`, error);
+document.querySelector(`style[data-8b-part="scene:${id}"]`)?.setAttribute('media', 'not all');
+}
+}
+};
+if (!live) { window.motionReady = Promise.resolve(); return; }
+const number = () => document.querySelectorAll('[data-8b-items]').forEach(group => {
+let items;
+try { items = [...group.querySelectorAll(group.getAttribute('data-8b-items'))]; } catch { return; }
+items.forEach((item, index) => { item.style.setProperty('--i', index); item.style.setProperty('--n', items.length); });
+});
+number();
+measures.add(number);
+requestAnimationFrame(realign);
+new ResizeObserver(remeasure).observe(document.body);
+document.fonts?.ready.then(remeasure);
+addEventListener('load', remeasure);
+window.motionReady = (document.fonts?.ready ?? Promise.resolve()).then(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+})();
+(() => {
+const kit = window.motionKit;
+if (!kit.live || !matchMedia('(pointer: fine)').matches) return;
+let target = scrollY, current = scrollY, last = 0, running = false, paused = false;
+const inner = (node, dy) => {
+for (; node && node !== document.body && node !== document.documentElement; node = node.parentElement) {
+if (!/(auto|scroll)/.test(getComputedStyle(node).overflowY) || node.scrollHeight <= node.clientHeight) continue;
+if (dy > 0 ? node.scrollTop + node.clientHeight < node.scrollHeight - 1 : node.scrollTop > 0) return true;
+}
+return false;
+};
+const step = now => {
+current += (target - current) * (1 - Math.exp(-5.3 * Math.min(0.05, (now - last) / 1000)));
+last = now;
+if (Math.abs(target - current) < 0.5) current = target;
+scrollTo({ top: current, behavior: 'instant' });
+if (current !== target) requestAnimationFrame(step); else running = false;
+};
+addEventListener('wheel', event => {
+if (paused || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || inner(event.target, event.deltaY)) return;
+event.preventDefault();
+if (!running) target = current = scrollY;
+const unit = event.deltaMode === 1 ? 40 : event.deltaMode === 2 ? innerHeight : 1;
+target = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, target + event.deltaY * unit * 0.95));
+if (!running) { running = true; last = performance.now(); requestAnimationFrame(step); }
+}, { passive: false });
+kit.wheel = { stop() { paused = true; }, start() { paused = false; } };
+})();
+(() => {
+const kit = window.motionKit;
+if (!kit.live) return;
+const at = element => {
+const own = /^(\d{1,3}(?:\.\d+)?)%$/.exec((element.getAttribute('data-8b-enter') || '').trim());
+return own && +own[1] <= 100 ? own[1] / 100 : 0.88;
+};
+let pending = [...document.querySelectorAll('[data-8b-motion]')].map(element => ({ element, y: 0, at: at(element) }));
+let queued = false;
+const check = () => {
+queued = false;
+pending = pending.filter(item => {
+if (item.y > scrollY + innerHeight * item.at) return true;
+item.element.classList.add('is-in');
+return false;
+});
+};
+const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+kit.measure(() => { pending.forEach(item => { item.y = kit.box(item.element).y; }); queue(); });
+addEventListener('scroll', queue, { passive: true });
+})();
+(() => {
+if (!window.motionKit.live) return;
+const sheet = new CSSStyleSheet();
+sheet.replaceSync('[data-8b-off],[data-8b-off]::before,[data-8b-off]::after{animation-play-state:paused!important}');
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+const watch = new IntersectionObserver(entries => entries.forEach(entry => entry.target.toggleAttribute('data-8b-off', !entry.isIntersecting)));
+const watched = new WeakSet();
+const scan = () => document.getAnimations().forEach(animation => {
+const element = animation.effect?.target;
+if (!element || watched.has(element) || animation.effect.getTiming().iterations !== Infinity || animation.timeline !== document.timeline) return;
+watched.add(element);
+watch.observe(element);
+});
+scan();
+addEventListener('load', scan);
+document.addEventListener('animationstart', scan, true);
+})();
 </script>
-<script data-8b-part="scene:lineup">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('lineup');
-    section.querySelectorAll('.lu-row').forEach((row, index) => {
-      const face = row.querySelector('.lu-face'), name = row.querySelector('.lu-name');
-      gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { id: `lineup:row-${index}`, trigger: row, start: 'top bottom', end: 'bottom top', scrub: .4 } })
-        .fromTo(face, { scale: .42 }, { scale: 1, duration: .5, ease: 'power2.out' }, 0)
-        .to(face, { scale: .42, duration: .5, ease: 'power2.in' }, .5)
-        .fromTo(name, { '--heat': 0, xPercent: 7 }, { '--heat': 1, xPercent: 0, duration: .5, ease: 'power1.out' }, 0)
-        .to(name, { '--heat': .1, xPercent: -7, duration: .5, ease: 'power1.in' }, .5);
-    });
+<script data-8b-part="scene-script:opening">
+motionKit.scene('opening', () => {
+  const title = document.getElementById('opening-title');
+  const words = [...title.querySelectorAll('.op-word')];
+  motionKit.measure(() => {
+    motionKit.set(title, { '--opening-title-w': `${title.offsetWidth}px`, '--opening-title-h': `${title.offsetHeight}px` });
+    words.forEach(word => motionKit.set(word, { '--opening-word-x': `${word.offsetLeft - title.offsetLeft}px`, '--opening-word-y': `${word.offsetTop - title.offsetTop}px` }));
   });
 });
 </script>
-<script data-8b-part="scene:battle">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('battle');
-    const stage = section.querySelector('.bt-stage');
-    const nameA = section.querySelector('.bt-name--a'), nameB = section.querySelector('.bt-name--b');
-    const rounds = [...section.querySelectorAll('.bt-round')];
-    section.setAttribute('data-duel', '');
-    const timeline = gsap.timeline({ defaults: { ease: 'power2.inOut' }, scrollTrigger: {
-      id: 'battle', trigger: section, start: 'top top', end: 'bottom bottom', scrub: .6
-    }});
-    timeline
-      .set(rounds, { opacity: .35 }, 0)
-      .to(rounds[0], { opacity: 1, duration: .2 }, 0)
-      .to(stage, { '--split': '74%', duration: 1 }, 0)
-      .to(nameA, { scale: 1.16, duration: 1 }, 0)
-      .to(nameB, { scale: .82, duration: 1 }, 0)
-      .to(rounds[0], { opacity: .35, duration: .2 }, 1.1)
-      .to(rounds[1], { opacity: 1, duration: .2 }, 1.1)
-      .to(stage, { '--split': '26%', duration: 1.4 }, 1.1)
-      .to(nameA, { scale: .82, duration: 1.4 }, 1.1)
-      .to(nameB, { scale: 1.16, duration: 1.4 }, 1.1)
-      .to(rounds[1], { opacity: .35, duration: .2 }, 2.6)
-      .to(rounds, { opacity: 1, duration: .3 }, 2.8)
-      .to(stage, { '--split': '50%', duration: 1 }, 2.6)
-      .to([nameA, nameB], { scale: 1, duration: 1 }, 2.6);
-    return () => section.removeAttribute('data-duel');
-  });
-});
-</script>
-<script data-8b-part="scene:zones">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('zones');
-    const map = section.querySelector('.zn-map');
-    const spots = [...section.querySelectorAll('.zn-spot')];
-    const centre = spot => ['--x', '--y'].map(name => parseFloat(getComputedStyle(spot).getPropertyValue(name)) / 100);
-    const zoom = 1.9;
-    const timeline = gsap.timeline({ defaults: { ease: 'power2.inOut' }, scrollTrigger: {
-      id: 'zones', trigger: section.querySelector('.zn-items'), start: 'top 70%', end: 'bottom 45%', scrub: .6, invalidateOnRefresh: true
-    }});
-    spots.forEach((spot, index) => {
-      const at = index * 1.6;
-      timeline
-        .to(map, { xPercent: () => -zoom * (centre(spot)[0] - .5) * 100, yPercent: () => -zoom * (centre(spot)[1] - .5) * 100, scale: zoom, duration: 1 }, at)
-        .to(spots.filter(other => other !== spot), { opacity: .35, duration: .6 }, at + .2)
-        .to(spot, { opacity: 1, duration: .6 }, at + .2);
-    });
-    timeline
-      .to(map, { xPercent: 0, yPercent: 0, scale: 1, duration: 1 }, spots.length * 1.6)
-      .to(spots, { opacity: 1, duration: .6 }, spots.length * 1.6 + .2);
-  });
-});
-</script>
-<script data-8b-part="scene:looks">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('looks');
-    const scroller = section.querySelector('.lk-scroll');
-    const track = section.querySelector('.lk-track');
-    const photos = [...section.querySelectorAll('.lk-photo')];
-    section.setAttribute('data-track', '');
-    const travel = () => -(track.scrollWidth - track.parentElement.clientWidth);
-    const timeline = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
-      id: 'looks', trigger: scroller, start: 'top bottom', end: 'bottom bottom', scrub: .5, invalidateOnRefresh: true
-    }});
-    timeline.fromTo(photos[0], { clipPath: 'circle(10% at 50% 42%)' }, { clipPath: 'circle(80% at 50% 42%)', duration: 1, ease: 'power2.out' }, 0);
-    timeline.fromTo(track, { x: 0 }, { x: travel, duration: 1.7 }, 1);
-    photos.slice(1).forEach((photo, index) => {
-      timeline.fromTo(photo, { clipPath: 'circle(10% at 50% 42%)' }, { clipPath: 'circle(80% at 50% 42%)', duration: .6, ease: 'power2.out' }, 1 + index * .85 + .25);
-    });
-    return () => section.removeAttribute('data-track');
-  });
-});
-</script>
-<script data-8b-part="scene:partners">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('partners');
-    const panes = [...section.querySelectorAll('.pt-pane')];
-    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { id: 'partners', trigger: section, start: 'top 85%', end: 'bottom bottom', scrub: .5 } })
-      .fromTo(section.querySelector('.pt-man'), { yPercent: 24, scale: 1.08 }, { yPercent: 0, scale: 1, duration: 1, ease: 'power2.out' }, 0)
-      .fromTo(panes, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .55, stagger: .15, ease: 'power2.out' }, .2);
-  });
-});
-</script>
-<script data-8b-part="scene:fanwall">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('fanwall');
-    const items = [...section.querySelectorAll('.fw-item')];
-    const columns = getComputedStyle(section.querySelector('.fw-wall')).gridTemplateColumns.split(' ').length;
-    items.forEach((item, index) => {
-      const lag = (index % columns) * .05;
-      gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { id: `fanwall:photo-${index}`, trigger: item, start: 'top bottom', end: 'bottom top', scrub: .3 } })
-        .to(item.querySelector('.fw-grade'), { opacity: 0, duration: .14, ease: 'power1.out' }, .36 + lag)
-        .to(item.querySelector('.fw-grade'), { opacity: 1, duration: .16, ease: 'power1.in' }, .56 + lag);
-    });
-  });
-});
-</script>
-<script data-8b-part="scene:tickets">
-queueMotion(() => {
-  const section = document.getElementById('tickets');
-  const passes = [...section.querySelectorAll('.tk-pass')];
-  gsap.matchMedia().add({ wide: '(prefers-reduced-motion: no-preference) and (min-width: 861px)', narrow: '(prefers-reduced-motion: no-preference) and (max-width: 860px)' }, context => {
-    if (context.conditions.wide) {
-      const middle = (passes.length - 1) / 2;
-      gsap.timeline({ scrollTrigger: { id: 'tickets', trigger: section.querySelector('.tk-passes'), start: 'top 95%', end: 'top 35%', scrub: .5 } })
-        .from(passes, { xPercent: index => (middle - index) * 72, y: index => Math.abs(middle - index) * 60, rotate: index => (index - middle) * 9, ease: 'power2.out', duration: 1 }, 0);
-    } else {
-      passes.forEach((pass, index) => {
-        gsap.from(pass, { xPercent: index % 2 ? 10 : -10, rotate: index % 2 ? 5 : -5, ease: 'power2.out', scrollTrigger: { id: `tickets:pass-${index}`, trigger: pass, start: 'top bottom', end: 'top 55%', scrub: .5 } });
-      });
-    }
-  });
-});
-</script>
-<script data-8b-part="scene:contact">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('contact');
-    const rings = [...section.querySelectorAll('.ct-rings span')];
-    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { id: 'contact', trigger: section, start: 'top bottom', end: 'center center', scrub: .5 } })
-      .fromTo(rings, { scale: index => .15 + index * .12, opacity: 0 }, { scale: 1, opacity: 1, duration: .8, stagger: .07, ease: 'power2.out' }, 0)
-      .fromTo(section.querySelector('h2'), { '--heat': 0 }, { '--heat': 1, duration: .7 }, .2);
-  });
+<script data-8b-part="scene-script:looks">
+motionKit.scene('looks', () => {
+  const track = document.getElementById('looks').querySelector('.lk-track');
+  motionKit.measure(() => motionKit.set(track, { '--looks-travel': `${Math.max(0, track.scrollWidth - track.parentElement.clientWidth)}px` }));
 });
 </script>
 </body>

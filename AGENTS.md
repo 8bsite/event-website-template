@@ -1,6 +1,6 @@
 # AGENTS.md: event website template
 
-Event website for a music or culture festival, with lineup, schedule, venue zones and tickets. One file, `index.html`, with inline CSS and scripts (GSAP, ScrollTrigger, Lenis from jsDelivr); no build step, and none is needed for copy, colour or photo edits.
+Event website for a music or culture festival, with lineup, schedule, venue zones and tickets. One file, `index.html`, with inline CSS and scripts, no JavaScript libraries: the scroll motion is CSS scroll-driven animations plus a small inline motion kit; no build step, and none is needed for copy, colour or photo edits. A GSAP build of the same page is `index.gsap.html` (GSAP 3.13.0, ScrollTrigger, Lenis 1.3.27 from jsDelivr): edit one of the two, not both.
 
 ## Files
 Edit these files, not a page fetched by URL (that arrives as a summary).
@@ -14,18 +14,12 @@ Upload `index.html`, LICENSE and CREDITS.md; not this file, README.md or `previe
 
 ## Keep
 - Every `id`, `data-8b-section`, `data-8b-motion` and `data-8b-part` (`section:<id>` styles, `scene:<id>` animation).
+- The motion parts `motion-gate` (head: sets `data-8b-live` on `<html>` only with scroll-driven animation support and no reduced motion), `motion-kit` and `motion`, and every other `data-8b-*` attribute (`data-8b-items` groups, `data-8b-off`, `data-8b-enter`): the CSS and the kit read them. Items ordered by `--i` follow their group; counts the CSS fixes are listed under Known limits (`data-8b-fixed` marks such a group).
 - Selectors the scripts use:
   - `section-script:navigation`: `.menu` `.nav__menu` `.menu__close`
   - `section-script:opening`: `.op-one`
-  - `scene:opening`: `.op-rings` `.m-ring` `.op-veil__lid` `.op-zoom` `.op-word--a` `.op-word--c` `.op-word--b` `.op-upper` `.op-lower` `.op-veil`
-  - `scene:lineup`: `.lu-row` `.lu-face` `.lu-name`
-  - `scene:battle`: `.bt-stage` `.bt-name--a` `.bt-name--b` `.bt-round`
-  - `scene:zones`: `.zn-map` `.zn-spot` `.zn-items`
-  - `scene:looks`: `.lk-scroll` `.lk-track` `.lk-photo`
-  - `scene:partners`: `.pt-pane` `.pt-man`
-  - `scene:fanwall`: `.fw-item` `.fw-wall` `.fw-grade`
-  - `scene:tickets`: `.tk-pass` `.tk-passes`
-  - `scene:contact`: `.ct-rings`
+  - `scene-script:opening`: `.op-word`
+  - `scene-script:looks`: `.lk-track`
 - `style="--len:N"` = characters in that display line, spaces included: `Heat of Seoul` is 13, `Nova Nine` is 9, `Seora Kim` is 9, `Halo Kids` is 9, `Moon June` is 9, `Parallel` is 8, `ONDO 온도` is 7.
 - The rings, the venue plan, the passes and the audience panes are HTML and CSS, not images: restyle them through the tokens. Each audience pane's height comes from style="--share:N" on its column.
 - Korean text (온도 and the dish names) is marked lang="ko"; the font covers Latin and Hangul.
@@ -45,25 +39,29 @@ Upload `index.html`, LICENSE and CREDITS.md; not this file, README.md or `previe
 
 ## Ask the owner for
 All demo text, never to be invented:
-- Dates 12–13 June 2027, Saturday 12 June and Sunday 13 June (title, meta description, phone menu, opening, lineup).
+- Dates 12-13 June 2027, Saturday 12 June and Sunday 13 June (title, meta description, phone menu, opening, lineup).
 - Venue and address: Pier Arena, Maashaven, Riverside Quay 2, Rotterdam; trams 20 and 23, "four minutes on foot", bike parking at the north gate; "Step-free from the tram stop" (opening, zones, contact, FAQ, footer).
-- The day schedule: nine times 12:00–22:30 in CEST, "same schedule both days" (opening).
+- The day schedule: nine times 12:00-22:30 in CEST, "same schedule both days" (opening).
 - Acts and set times: Nova Nine, Seora Kim, Halo Kids, Moon June, Parallel with their days, stages and times; "five headline acts", "fourteen crews, DJs and rookies", "announced in May", "set times go live two weeks before" (lineup).
 - Battle: Saturday 14:30, "Last year's final, rematched", eight crews, three rounds (Footwork, Choreo, Freestyle), the crowd votes with lightsticks, crews Red Line (Rotterdam) and Night Shift (Seoul), entries for 2027 (battle).
-- Zones: hours 12:00–23:00, 14:30–18:30, 12:30–20:00, 12:00–23:30; a standing floor for 6,000 and a raised deck; workshops and random play dance at six; twelve chairs and Korean skincare brands in the beauty lab; twenty stalls and a tea bar (zones, food).
+- Zones: hours 12:00-23:00, 14:30-18:30, 12:30-20:00, 12:00-23:30; a standing floor for 6,000 and a raised deck; workshops and random play dance at six; twelve chairs and Korean skincare brands in the beauty lab; twenty stalls and a tea bar (zones, food).
 - Beauty lab sessions: times 12:30 · 16:00, 13:30 · 17:00, 14:30 · 18:30, "twenty minutes each", products "to try and take home" (looks).
-- Food prices €4–€9 for six dishes; "cards and phones only", "costs less than a lightstick"; a top-up point for prepaid cards (food, FAQ).
+- Food prices €4-€9 for six dishes; "cards and phones only", "costs less than a lightstick"; a top-up point for prepaid cards (food, FAQ).
 - Audience and reach: "Eighteen thousand visitors over two days", shares 40% / 30% / 20% / 10% with age ranges, "more than a hundred others" in the creators avatar list (hidden text) and its label "Creators who covered ONDO last year" (partners).
-- Photo wall: lights up at 21:00, photos "land on this page by midnight", hashtag #ondoheat, and the caption "Photos from last year's wall, shared with permission" — the photos are stock photos, so change or remove this line (fanwall).
+- Photo wall: lights up at 21:00, photos "land on this page by midnight", hashtag #ondoheat, and the caption "Photos from last year's wall, shared with permission", the photos are stock photos, so change or remove this line (fanwall).
 - Passes: €69, €119, €189, "400 only", early entry 11:30, Saturday soundcheck 16:00, wristbands posted three weeks before, "Prices include all fees", under-12s free with a paying adult, groups of eight or more (tickets, FAQ).
 - Rules and policies: under-16s need an adult on the standing floor, lightsticks, A3 banners and one small bag allowed, no poles, chairs or cameras with detachable lenses; quiet room, companions go free; an app with live schedule and push notes; refunds up to 30 days before minus a €5 fee and an official resale exchange (FAQ).
-- Contacts and service: hello@, battle@ and partners@ondo.example (replaced), phone +31 10 000 0000 (replaced), ticket desk "daily 10:00–18:00", "answers within a day" (FAQ, battle, partners, contact).
+- Contacts and service: hello@, battle@ and partners@ondo.example (replaced), phone +31 10 000 0000 (replaced), ticket desk "daily 10:00-18:00", "answers within a day" (FAQ, battle, partners, contact).
 - Company and year: "© 2027 ONDO Festival B.V. · Rotterdam" (footer).
 
 ## Known limits
 - The photo wall is static: nothing collects tagged photos; connect a feed or reword the paragraph.
 - In the looks track, while it slides, one look's text sits beside the next look's photo for a moment.
 - Without JavaScript the phone menu button cannot open the overlay, and the top links are hidden at 860 px and below; on phones the first screen links Get tickets and See the lineup and the footer links Tickets, Partners and Contact, but Battle, Zones and FAQ have no other link.
+- Some counts are fixed by CSS `:nth-of-type` rules and keyframes: the opening has exactly nine schedule rings, whose windows and timing are laid out for nine; the battle has three rounds, the looks track three looks, the contact block four rings, and the three passes each move by their own class (`tk-pass--day`, `tk-pass--weekend`, `tk-pass--pit`). Change the text inside them freely; to add or remove one, rewrite the matching rules in that section's `scene:` style.
+- The zones plan zooms to four fixed targets written in the `zones-div-zn-map-translate` keyframes, matched to each zone window's `--x` and `--y`. Moving a window, or adding or removing a zone, needs those keyframes and the four spot opacity keyframes rewritten.
+- The opening title splits as three words (`op-word--a`, `op-word--b`, `op-word--c`), each with its own keyframes: keep three word spans when you change the title.
+- Without scroll-driven animation support (Firefox today) the page shows its finished layout: the second screen with its nine round windows, the battle line in the middle, the whole zones plan, the looks as a vertical list and the passes laid out flat; only the opening load-in, the photo drift and the title's colour flow still play. With reduced motion on, nothing moves.
 
 ## Check
-375 and 1440 px, reduced motion on, console clean; `data-8b-placeholder` and ONDO left only in class names.
+375 and 1440 px, reduced motion on, a browser without scroll-driven animations (Firefox: the finished static layout), console clean; `data-8b-placeholder` and ONDO left only in class names.
